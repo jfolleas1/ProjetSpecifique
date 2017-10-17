@@ -14,3 +14,8 @@ class PointTest(unittest.TestCase):
         """Test of function distance."""
         dist = self.point_a.distance(self.point_b)
         self.assertEqual(5, dist)
+
+    def test_zero_distance(self):
+        """Test of function distance."""
+        dist = self.point_a.distance(self.point_a)
+        self.assertEqual(0, dist)
