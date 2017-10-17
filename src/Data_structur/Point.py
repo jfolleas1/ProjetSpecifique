@@ -24,6 +24,8 @@ class Point:
         self.dimenstion = dimenstion
         self.coordinate = coordinate
 
+    def __repr__(self):
+        return "Pt d"+str(self.dimenstion)+" : "+self.coordinate.__repr__()
 
     def distance(self, other_point):
         """
@@ -33,5 +35,7 @@ class Point:
         """
         sum = 0
         for tuple in zip(self.coordinate, other_point.coordinate):
-            sum += tuple[0]*tuple[1]
+            sum += (tuple[0]-tuple[1])**2
         return math.sqrt(sum)
+
+
