@@ -1,5 +1,5 @@
 import unittest
-from src.DataStructure.Point import Point
+from src.structureData.Point import Point
 
 
 class PointTest(unittest.TestCase):

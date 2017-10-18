@@ -1,8 +1,6 @@
 # -----------------------------------------------------------------------------------------
 # Import
-import DataProvider
-from pathlib import Path
-import DataProvider
+from src.providerData.ReaderFromFile import ReaderFromFile
 # -----------------------------------------------------------------------------------------
 # Constant
 
@@ -10,6 +8,8 @@ import DataProvider
 # Code
 
 def main():
-    pass
+    test = ReaderFromFile (2, "./data/", "test.txt")
+    test.get_points()
+    print(test.listPoints)
 
 main()

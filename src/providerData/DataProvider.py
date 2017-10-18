@@ -29,7 +29,7 @@ class DataProvider:
         self.dimension = dimension
         self.size_of_data_set = size_of_data_set
 
-    def Get_points(self):
+    def get_points(self):
         """
         Provide the data in the forme of a list of Point objects
         """

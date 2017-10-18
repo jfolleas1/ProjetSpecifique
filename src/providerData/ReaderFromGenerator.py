@@ -2,7 +2,8 @@
 # Import
 import pandas as pd
 import numpy as np
-import DataProvider
+from src.providerData.DataProvider import DataProvider
+from src.structureData.Point import Point
 # -----------------------------------------------------------------------------------------
 # Constant
 

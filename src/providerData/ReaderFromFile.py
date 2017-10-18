@@ -1,53 +1,49 @@
 # -----------------------------------------------------------------------------------------
 # Import
-import DataProvider
+from src.providerData.DataProvider import DataProvider
 from pathlib import Path
-import DataProvider
+from src.structureData.Point import Point
 # -----------------------------------------------------------------------------------------
 # Constant
 SEPARATOR_COORDINATE = " "
 
 # -----------------------------------------------------------------------------------------
 # Code
+
+
 class ReaderFromFile(DataProvider):
     """
-    This class allow to provide data randomly.
+    This class allow to provide data read from file.
     Args :
     :param dimension: int that represent dimention of the vector that will be in the data.
-    :param domain: int that represent domain ([0,<domain>]) for dimension of the vectors that will be in the data.
-    :param distibusion: distribution of the random value:
-        - 0 : uniform
-        - x (10 > x >= 1): x normal laws superposed
-    :param size_of_data_set: Size of the data set.
+    TODO
     """
-    def __init__(self, dimension, repositoryPath ,fileName):
-        DataProvider.__init__(dimension, 0)
-        self.repositoryPath = repositoryPath
-        self.fileName = fileName
+    def __init__(self, dimension, repository_path ,file_name):
+        DataProvider.__init__(self, dimension, 0)
+        self.repository_path = repository_path
+        self.file_name = file_name
         self.listPoints = []
 
-
-    def Get_points(self):
-
+    def get_points(self):
         # We test if the file exist
-        pathFile = Path(self.repositoryPath + self.fileName)
-        if not pathFile.is_file():
-            raise Exception("The file does not exist"+ str(pathFile))
+        path_file = Path(self.repository_path + self.file_name)
+        if not path_file.is_file():
+            raise Exception("The file does not exist"+ str(path_file))
 
+        line_counter = 0
         try:
-            with open(pathFile) as file:
-                line_counter = 0
+            with open(str(path_file)) as file:
+
                 for line in file:
                     line_counter += 1
+                    line = line.replace('\n', '')
                     coodinates = line.split(SEPARATOR_COORDINATE)
                     if len(coodinates) != self.dimension:
                         raise Exception("The dimension of the point at line " + str(line_counter) + " is not correct")
+                    self.listPoints.append(Point(coodinates))
 
         except Exception as e:
             print("Probleme during reading line " + str(line_counter))
             raise e
 
-
-
-
-
+        return self.listPoints

@@ -19,10 +19,9 @@ class Point:
     :param dimention: int that represent dimention of the vector
     :param coordinate: list of int that are the coordinate of the vector
     """
-    def __init__(self, coordinate):
-
+    def __init__(self, coordinates):
         self.coordinates = coordinates
-        assert(type(coordinate) == list)
+        assert(type(coordinates) == list)
         self.dimension = len (coordinates)
 
     def __repr__(self):
