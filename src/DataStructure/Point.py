@@ -20,12 +20,14 @@ class Point:
     :param dimention: int that represent dimention of the vector
     :param coordinate: list of int that are the coordinate of the vector
     """
-    def __init__(self, dimenstion, coordinate):
-        self.dimenstion = dimenstion
-        self.coordinate = coordinate
+    def __init__(self, coordinate):
+
+        self.coordinates = coordinates
+        assert(type(coordinate) == list)
+        self.dimension = len (coordinates)
 
     def __repr__(self):
-        return "Pt d"+str(self.dimenstion)+" : "+self.coordinate.__repr__()
+        return "Pt d"+str(self.dimension)+" : "+self.coordinates.__repr__()
 
     def distance(self, other_point):
         """
@@ -34,7 +36,7 @@ class Point:
         :return: the distance between <self> and <other_point>
         """
         sum = 0
-        for tuple in zip(self.coordinate, other_point.coordinate):
+        for tuple in zip(self.coordinates, other_point.coordinates):
             sum += (tuple[0]-tuple[1])**2
         return math.sqrt(sum)
 

@@ -1,46 +1,14 @@
-# -------- Aim of the file
-
-# This file provide a class Point that will be our data strutur for the data that will fit our Bloom Filter
-
-# -------- Import
-
-from abc import ABCMeta, abstractmethod
+# -----------------------------------------------------------------------------------------
+# Import
 import pandas as pd
 import numpy as np
+import DataProvider
+# -----------------------------------------------------------------------------------------
+# Constant
+SEPARATOR_COORDINATE = " "
 
-
-
-
-# --------- Constant
-
-
-# --------- Code
-
-
-class DataProvider:
-    """
-    This class is the interface for all data providers. The data provided will be use by the Bloom filter.
-    Args :
-    :param dimension: int that represent dimention of the vector that will be in the data.
-    :param size_of_data_set: Size of the data set.
-    """
-    __metaclass__ = ABCMeta
-
-    @abstractmethod
-    def __init__(self, dimension, size_of_data_set):
-        self.dimension = dimension
-        self.size_of_data_set = size_of_data_set
-
-    def Get_points(self):
-        """
-        Provide the data in the forme of a list of Point objects
-        """
-        pass
-
-
-
-
-
+# -----------------------------------------------------------------------------------------
+# Code
 class RandomDataGenerator(DataProvider):
     """
     This class allow to provide data randomly.
@@ -89,7 +57,3 @@ class RandomDataGenerator(DataProvider):
                 number_of_vector += 1
         if save_file_name != None:
             self.point_list.to_csv(save_file_name, encoding='utf-8')
-
-
-# random.uniform(a, b)
-# random.choice(seq)
