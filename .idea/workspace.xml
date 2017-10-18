@@ -4,6 +4,7 @@
     <list default="true" id="1f49a04d-0ba6-4fc6-874b-a308e9fddef0" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Data_provider/Data_provider.py" afterPath="$PROJECT_DIR$/src/Data_provider/Data_provider.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Data_structur/Point.py" afterPath="$PROJECT_DIR$/src/Data_structur/Point.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,8 +18,8 @@
       <file leaf-file-name="Point.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Data_structur/Point.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="38" selection-end-column="29" />
+            <state relative-caret-position="360">
+              <caret line="24" column="36" lean-forward="true" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -39,11 +40,21 @@
       <file leaf-file-name="Data_provider.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Data_provider/Data_provider.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="998">
-              <caret line="75" column="4" lean-forward="false" selection-start-line="75" selection-start-column="4" selection-end-line="75" selection-end-column="4" />
+            <state relative-caret-position="454">
+              <caret line="98" column="33" lean-forward="true" selection-start-line="98" selection-start-column="33" selection-end-line="98" selection-end-column="33" />
               <folding>
                 <element signature="e#156#195#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Apllication.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Apllication.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -84,8 +95,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Data_structur/Point.py" />
-        <option value="$PROJECT_DIR$/src/Data_structur/Point.py" />
         <option value="$PROJECT_DIR$/tests/test_point.py" />
+        <option value="$PROJECT_DIR$/src/Data_structur/Point.py" />
         <option value="$PROJECT_DIR$/src/Data_provider/Data_provider.py" />
       </list>
     </option>
@@ -128,6 +139,12 @@
               <item name="ProjetSpecifique" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="Data_provider" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ProjetSpecifique" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ProjetSpecifique" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Data_structur" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ProjetSpecifique" type="b2602c69:ProjectViewProjectNode" />
@@ -217,7 +234,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508276037711</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Improve class Data Provider">
+      <created>1508316750823</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1508316750823</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -264,7 +288,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Begin of the class data generator &#10;Unit test for the class Point" />
     <MESSAGE value="Add new test for Point class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add new test for Point class" />
+    <MESSAGE value="Improve class Data Provider" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improve class Data Provider" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -330,21 +355,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Apllication.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Data_structur/Point.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="38" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/abc.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -371,10 +381,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Apllication.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Data_structur/Point.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="36" lean-forward="true" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Data_provider/Data_provider.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="998">
-          <caret line="75" column="4" lean-forward="false" selection-start-line="75" selection-start-column="4" selection-end-line="75" selection-end-column="4" />
+        <state relative-caret-position="454">
+          <caret line="98" column="33" lean-forward="true" selection-start-line="98" selection-start-column="33" selection-end-line="98" selection-end-column="33" />
           <folding>
             <element signature="e#156#195#0" expanded="true" />
           </folding>
