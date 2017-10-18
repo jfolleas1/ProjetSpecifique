@@ -20,7 +20,11 @@ class DiscretisatorTest(unittest.TestCase):
         self.assertEqual(self.point_a.coordinates, [Decimal('1.1'), Decimal('2.1'), Decimal('3.9'), Decimal('4.9')])
 
 
-    def test_discretise_rectangel(self):
+    def test_discretise_rectangle(self):
         print self.discretisator.discretise_point(self.point_b)
         print self.discretisator.discretise_point(self.point_c)
+
+    def test_discretise_set(self):
+        print self.discretisator.discretise_point_set([self.point_b, self.point_c])
+
 

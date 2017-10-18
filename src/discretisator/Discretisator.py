@@ -32,7 +32,7 @@ class Discretisator:
         """
         results = []
         for point in points:
-            results += self.discretisePoint(point)
+            results += self.discretise_point(point)
         return results
 
 
