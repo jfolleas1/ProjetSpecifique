@@ -12,10 +12,9 @@ import math
 ##### Code
 
 
-
 class Point:
     """
-    This class is the data sructur for the data that will be index by the bloom filter
+    This class is the data sructure for the data that will be index by the bloom filter
     Args :
     :param dimention: int that represent dimention of the vector
     :param coordinate: list of int that are the coordinate of the vector
@@ -28,6 +27,7 @@ class Point:
 
     def __repr__(self):
         return "Pt d"+str(self.dimension)+" : "+self.coordinates.__repr__()
+
 
     def distance(self, other_point):
         """
