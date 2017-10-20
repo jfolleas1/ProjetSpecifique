@@ -19,9 +19,8 @@ class ReaderFromFile(DataProvider):
     :param dimension: int that represent dimention of the vector that will be in the data.
     TODO
     """
-    def __init__(self, dimension, repository_path ,file_name):
+    def __init__(self, dimension, file_name):
         DataProvider.__init__(self, dimension, 0)
-        self.repository_path = repository_path
         self.file_name = file_name
         self.listPoints = []
         self.logger = Logger('ReaderFromFile')
