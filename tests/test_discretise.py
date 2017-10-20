@@ -21,10 +21,10 @@ class DiscretisatorTest(unittest.TestCase):
 
 
     def test_discretise_rectangle(self):
-        print self.discretisator.discretise_point(self.point_b)
-        print self.discretisator.discretise_point(self.point_c)
+        print(self.discretisator.discretise_point(self.point_b))
+        print(self.discretisator.discretise_point(self.point_c))
 
     def test_discretise_set(self):
-        print self.discretisator.discretise_point_set([self.point_b, self.point_c])
+        print (self.discretisator.discretise_point_set([self.point_b, self.point_c]))
 
 
