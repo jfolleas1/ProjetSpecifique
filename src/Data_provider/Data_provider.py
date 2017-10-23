@@ -1,8 +1,10 @@
-# -------- Aim of the file
+# -------- 
+# Aim of the file
 
 # This file provide a class Point that will be our data strutur for the data that will fit our Bloom Filter
 
-# -------- Import
+# -------- 
+# Import
 
 from abc import ABCMeta, abstractmethod
 import pandas as pd
@@ -13,10 +15,12 @@ from src.Data_structur.Point import Point
 
 
 
-# --------- Constant
+# ---------
+#  Constant
 
 
-# --------- Code
+# --------- 
+# Code
 
 
 class DataProvider:
@@ -32,7 +36,8 @@ class DataProvider:
     def __init__(self, dimension, size_of_data_set):
         self.dimension = dimension
         self.size_of_data_set = size_of_data_set
-
+    
+    @abstractmethod
     def Get_points(self):
         """
         Provide the data in the forme of a list of Point objects
@@ -77,6 +82,13 @@ class RandomDataGenerator(DataProvider):
 
     @staticmethod
     def distant_enough(point, delta, data_set):
+        """
+        This method verify that the point <point> is distant enough (at least <delta>) to all points in <data_set>.
+        :param point: The point, as object Point, that want to insert to the generated data.
+        :param delta: (float) the minimum distance between the point <point> to the <data_set>
+        :param data_set: The data set in form of list of object Point
+        :return: Boolean at True is the point <point> is at at least <delta> from all points in <data_set>
+        """
         for other_point in data_set:
             if point.distance(other_point) <= delta:
                 return False
@@ -84,10 +96,13 @@ class RandomDataGenerator(DataProvider):
 
     def genarate_falses(self, delta, data_set, save_file_name=None):
         """
-        This methode genrate the data and store it into the object attribute point_list.
+        This method genrate the data and store it into the object attribute point_list. Each point generated in
+            list_point is at least at <delta> from any point in <data_set>.
+        :param delta: (float) the minimum distance between the point <point> to the <data_set>
+        :param data_set: The data set in form of list of object Point
         :param save_file_name: name of the file in which we will store the generate data for next tests.
             if this parameter if not registered the data will be not save.
-        :return: Nothing.
+        :return: Nothing
         """
         number_of_vector = 0
         list_of_distant_vector = []
@@ -102,6 +117,13 @@ class RandomDataGenerator(DataProvider):
         if save_file_name:
             pd.DataFrame(list_of_distant_vector).to_csv(save_file_name, encoding='utf-8')
 
+    def Get_points(self):
+        """
+        Provide the data in the forme of a list of Point objects
+        """
+        return self.point_list
 
+
+# Do not read it, it is for the next iteration
 # random.uniform(a, b)
 # random.choice(seq)
