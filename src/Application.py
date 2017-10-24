@@ -24,6 +24,13 @@ LAMBDA_ERROR = 'lambdaError'
 # Code
 
 def main():
+    """
+    Run the application:
+        - instanciate reader and discritisator.
+        - Call method to create the Bloom filter.
+        - display result.
+    :return:
+    """
     logger = Logger('Main')
     logger.info('begin operation on bloom filter')
 
@@ -37,8 +44,16 @@ def main():
     config.read(PATH_CONFIG)
     reader, discritisator = getParameters (logger, config)
 
+    # TODO call Bloom filter method.
+
 
 def getParameters (logger, config):
+    """
+    Get parameters in config file and create the reader and the discretisator associated with the right parameters.
+    :param logger: instance allowing to log
+    :param config: config file
+    :return: reader, discritisator with config found in config file.
+    """
     try:
         reader = None
         discritisator = None

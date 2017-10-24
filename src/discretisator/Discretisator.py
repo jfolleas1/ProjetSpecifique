@@ -28,7 +28,7 @@ class Discretisator:
 
     def discretise_point_set(self, points):
         """
-        Provide the data in the forme of a list of Point objects
+        Provide the data in the form of a list of Point objects
         """
         results = []
         for point in points:

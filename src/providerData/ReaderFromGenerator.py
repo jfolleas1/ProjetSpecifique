@@ -83,7 +83,9 @@ class RandomDataGenerator(DataProvider):
             pd.DataFrame(list_of_distant_vector).to_csv(save_file_name, encoding='utf-8')
 
 
-    def Get_points(self):
+    #@overrides(DataProvider)
+    def get_points(self):
+
         """
         Provide the data in the forme of a list of Point objects
         """

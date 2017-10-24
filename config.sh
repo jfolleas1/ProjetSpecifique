@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # config for arnaud
 if [ $1 == "arnaudConfig" ]
 	then

@@ -4,10 +4,9 @@
 
 # -------- Import
 
-from abc import ABCMeta, abstractmethod
-import pandas as pd
-import numpy as np
-
+import abc
+from src.util.Logger import Logger
+logger = Logger()
 
 
 
@@ -22,15 +21,17 @@ class DataProvider:
     :param dimension: int that represent dimention of the vector that will be in the data.
     :param size_of_data_set: Size of the data set.
     """
-    __metaclass__ = ABCMeta
+    __metaclass__ = abc.ABCMeta
 
-    @abstractmethod
+
     def __init__(self, dimension, size_of_data_set):
         self.dimension = dimension
         self.size_of_data_set = size_of_data_set
 
+    @abc.abstractmethod
     def get_points(self):
         """
         Provide the data in the forme of a list of Point objects
         """
-        pass
+        logger.error("call super method")
+        return

@@ -24,19 +24,17 @@ class RectangleDiscretisator(Discretisator):
             point[i] = point[i].quantize(self.lambda_error, decimal.ROUND_UP)
         return point
 
-
     def discretise_point(self, point):
         point_c = deepcopy(point) # TODO ???
         results = []
-        results.append(self.maximizePoint(point.coordinates))
-        self.discretise_recursive(point.coordinates, 0, results)
+        results.append(self.maximizePoint(point_c.coordinates))
+        self.discretise_recursive(point_c.coordinates, point.coordinates, 0, results)
         return results
 
-
-
-    def discretise_recursive(self, point, starting_index, results):
-        for i in range(starting_index, len(point)):
-            point_c = point[:] # TODO ????
-            point_c[i] -= self.lambda_error
-            results.append(point_c)
-            self.discretise_recursive(point_c, i+1, results)
+    def discretise_recursive(self, maximised_point, original_point, starting_index, results):
+        for i in range(starting_index, len(maximised_point)):
+            if maximised_point[i] != original_point[i]:
+                point_c = maximised_point[:] # TODO ????
+                point_c[i] -= self.lambda_error
+                results.append(point_c)
+                self.discretise_recursive(point_c, original_point, i+1, results)
