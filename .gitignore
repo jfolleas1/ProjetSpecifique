@@ -3,3 +3,4 @@
 data/
 # gitignore on  .idea #
 .idea/
+*pyc
