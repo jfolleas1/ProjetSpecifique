@@ -1,52 +1,16 @@
-# -------- 
-# Aim of the file
-
-# This file provide a class Point that will be our data strutur for the data that will fit our Bloom Filter
-
-# -------- 
+# -----------------------------------------------------------------------------------------
 # Import
 
-from abc import ABCMeta, abstractmethod
 import pandas as pd
 import numpy as np
+from src.providerData.DataProvider import DataProvider
+from src.structureData.Point import Point
+# -----------------------------------------------------------------------------------------
+# Constant
 
 
-from src.Data_structur.Point import Point
-
-
-
-# ---------
-#  Constant
-
-
-# --------- 
+# -----------------------------------------------------------------------------------------
 # Code
-
-
-class DataProvider:
-    """
-    This class is the interface for all data providers. The data provided will be use by the Bloom filter.
-    Args :
-    :param dimension: int that represent dimention of the vector that will be in the data.
-    :param size_of_data_set: Size of the data set.
-    """
-    __metaclass__ = ABCMeta
-
-    @abstractmethod
-    def __init__(self, dimension, size_of_data_set):
-        self.dimension = dimension
-        self.size_of_data_set = size_of_data_set
-    
-    @abstractmethod
-    def Get_points(self):
-        """
-        Provide the data in the forme of a list of Point objects
-        """
-        pass
-
-
-
-
 
 class RandomDataGenerator(DataProvider):
     """
@@ -114,8 +78,10 @@ class RandomDataGenerator(DataProvider):
                 if save_file_name:
                     list_of_distant_vector.append(vct)
                 number_of_vector += 1
+
         if save_file_name:
             pd.DataFrame(list_of_distant_vector).to_csv(save_file_name, encoding='utf-8')
+
 
     def Get_points(self):
         """
@@ -127,3 +93,4 @@ class RandomDataGenerator(DataProvider):
 # Do not read it, it is for the next iteration
 # random.uniform(a, b)
 # random.choice(seq)
+

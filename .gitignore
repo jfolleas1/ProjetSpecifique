@@ -1,4 +1,5 @@
 # gitignore on  data #
 ###################
 data/
+# gitignore on  .idea #
 .idea/
