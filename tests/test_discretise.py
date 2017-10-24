@@ -25,14 +25,16 @@ class DiscretisatorTest(unittest.TestCase):
         result_1 = self.discretisator.discretise_point(self.point_a)
         result_2 = self.discretisator.discretise_point(self.point_b)
         self.assertEqual(len(result_1), 4)
-        self.assertEqual(result_1, [[Decimal('1.1'), Decimal('2.1')], [Decimal('1.0'), Decimal('2.1')], [Decimal('1.0'), Decimal('2.0')], [Decimal('1.1'), Decimal('2.0')]])
+        self.assertEqual(result_1, [Point([Decimal('1.1'), Decimal('2.1')]), Point([Decimal('1.0'), Decimal('2.1')]), Point([Decimal('1.0'), Decimal('2.0')]), Point([Decimal('1.1'), Decimal('2.0')])])
         self.assertEqual(len(result_2), 4)
-        self.assertEqual(result_2, [[Decimal('1.1'), Decimal('2.1'), Decimal('4.9')], [Decimal('1.0'), Decimal('2.1'), Decimal('4.9')], [Decimal('1.0'), Decimal('2.0'), Decimal('4.9')], [Decimal('1.1'), Decimal('2.0'), Decimal('4.9')]])
+        self.assertEqual(result_2, [Point([Decimal('1.1'), Decimal('2.1'), Decimal('4.9')]), Point([Decimal('1.0'), Decimal('2.1'), Decimal('4.9')]), Point([Decimal('1.0'), Decimal('2.0'), Decimal('4.9')]), Point([Decimal('1.1'), Decimal('2.0'), Decimal('4.9')])])
+
+
 
     def test_discretise_set(self):
         result = self.discretisator.discretise_point_set([self.point_a, self.point_c])
         self.assertEqual(len(result), 8)
-        self.assertEqual(result, [[Decimal('1.1'), Decimal('2.1')], [Decimal('1.0'), Decimal('2.1')], [Decimal('1.0'), Decimal('2.0')], [Decimal('1.1'), Decimal('2.0')], [Decimal('6.1'), Decimal('8.1')], [Decimal('6.0'), Decimal('8.1')], [Decimal('6.0'), Decimal('8.0')], [Decimal('6.1'), Decimal('8.0')]])
+        self.assertEqual(result, [Point([Decimal('1.1'), Decimal('2.1')]), Point([Decimal('1.0'), Decimal('2.1')]), Point([Decimal('1.0'), Decimal('2.0')]), Point([Decimal('1.1'), Decimal('2.0')]), Point([Decimal('6.1'), Decimal('8.1')]), Point([Decimal('6.0'), Decimal('8.1')]), Point([Decimal('6.0'), Decimal('8.0')]), Point([Decimal('6.1'), Decimal('8.0')])])
 
 
     def test_discretise_jacques(self):
@@ -40,4 +42,3 @@ class DiscretisatorTest(unittest.TestCase):
         print("TEST JACUQES : ")
         print(self.discretisatorj.discretise_point(self.point_j))
         print()
-

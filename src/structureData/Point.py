@@ -27,7 +27,11 @@ class Point:
         assert(type(coordinates) == list)
         self.dimension = len(coordinates)
 
+    def __eq__(self, other):
+        return set(self.coordinates) == set(other.coordinates)
+
     def __repr__(self):
+
         return "Pt d"+str(self.dimension)+" : "+self.coordinates.__repr__()
 
     def to_string(self):
