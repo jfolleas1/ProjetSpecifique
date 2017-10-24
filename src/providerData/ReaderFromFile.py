@@ -17,7 +17,7 @@ class ReaderFromFile(DataProvider):
     This class allow to provide data read from file.
     Args :
     :param dimension: int that represent dimention of the vector that will be in the data.
-    TODO
+    :param file_name: Name of file containing the data.
     """
     def __init__(self, dimension, file_name):
         DataProvider.__init__(self, dimension, 0)
@@ -25,6 +25,7 @@ class ReaderFromFile(DataProvider):
         self.listPoints = []
         self.logger = Logger('ReaderFromFile')
 
+    #@overrides(DataProvider)
     def get_points(self):
         # We test if the file exist
         path_file = Path(self.repository_path + self.file_name)

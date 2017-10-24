@@ -70,6 +70,8 @@ class RandomDataGenerator(DataProvider):
         if save_file_name:
             pd.DataFrame(list_of_distant_vector).to_csv(save_file_name, encoding='utf-8')
 
+    #@overrides(DataProvider)
     def get_points(self):
+        pass
 
 
