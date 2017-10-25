@@ -21,7 +21,7 @@ class Discretisator:
 
     @abstractmethod
     def __init__(self, lambda_error=0.01):
-        self.lambda_error = Decimal(str(lambda_error))
+        self.lambda_error = lambda_error
 
     def discretise_point(self, point):
         """

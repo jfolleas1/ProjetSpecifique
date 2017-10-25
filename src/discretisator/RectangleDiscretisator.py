@@ -30,7 +30,7 @@ class RectangleDiscretisator(Discretisator):
         :param point: coordinates which have to be maximised
         """
         for i in range(0, len(point)):
-            point[i] = Decimal(point[i]).quantize(self.lambda_error, decimal.ROUND_UP)
+            point[i] = float(Decimal(str(point[i])).quantize(Decimal(str(self.lambda_error)), decimal.ROUND_UP))
         return point
 
     def discretise_point(self, point):
@@ -54,7 +54,7 @@ class RectangleDiscretisator(Discretisator):
         for i in range(starting_index, len(point)):
             if point[i] != original_point[i]:
                 #the original value of point should be the same for each passage in the loop  so deepcopy
-                point_c = deepcopy(point) # TODO ????
+                point_c = point[:]
                 point_c[i] -= self.lambda_error
                 results.append(Point(point_c))
                 self.discretise_recursive(point_c, original_point, i+1, results)
