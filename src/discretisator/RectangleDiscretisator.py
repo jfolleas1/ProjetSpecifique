@@ -14,18 +14,31 @@ from copy import deepcopy
 # --------- Code
 class RectangleDiscretisator(Discretisator):
     """
-
+    This class is an implementation of Dicretisator for a "rectangle" discrtisation.
+    Args :
+    :param lambda_error: float representing how each coordinates of the points should be ceil or floor.
     """
 
     def __init__(self, lambda_error):
         Discretisator.__init__(self, lambda_error)
 
     def maximizePoint(self, point):
+        """
+        Apply a ceil to each coordinate of the given list in parameter
+        Args :
+        :param point: coordinates which have to be maximised
+        """
         for i in range(0, len(point)):
             point[i] = point[i].quantize(self.lambda_error, decimal.ROUND_UP)
         return point
 
     def discretise_point(self, point):
+        """
+        Apply a combinatory ceil and floor to each coordinate of the given point in parameter, according to the lambda_error.
+        Return a list of points that enclose the given point in parameter, in function of the dimension of the point and the lambda_error
+        Args :
+        :param point: coordinates which have to be maximised
+        """
         #deepcopy the point given in parmeter to prevent instruction to modify it and be able able to use it again without modification
         point_c = deepcopy(point)
         results = []
@@ -34,9 +47,12 @@ class RectangleDiscretisator(Discretisator):
         return results
 
     def discretise_recursive(self, point, original_point, starting_index, results):
+        """
+        shouldn't be called directly, call for discretise
+        """
         for i in range(starting_index, len(point)):
             if point[i] != original_point[i]:
-                #For the next passage in the loop the original value of point is needed so deepcopy
+                #the original value of point should be the same for each passage in the loop  so deepcopy
                 point_c = point[:] # TODO ????
                 point_c[i] -= self.lambda_error
                 results.append(Point(point_c))
