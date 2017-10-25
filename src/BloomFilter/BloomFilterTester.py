@@ -51,9 +51,14 @@ class BloomFilterTester:
         :param discretisator: the Discretizator that we will use to index data
         :return: Nothing
         """
+        toto = True
         if discretisator:
             for pt in points:
                 for d_pt in discretisator.discretise_point(pt):
+                    if toto:
+                        toto=False
+                        print(str(pt))
+                        print(discretisator.discretise_point(Point([0.5, 0.5])))
                     self.bloom_filter.add(d_pt.to_string())
         else:
             for pt in points:
