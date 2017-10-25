@@ -30,10 +30,9 @@ class RandomDataGenerator(DataProvider):
     :param point_list: DataFrame that contain the data points:
     """
     def __init__(self, dimension, size_of_data_set=1000, domain=10000, distribution=0, point_list=[]):
-        DataProvider.__init__(self, dimension, [])
+        DataProvider.__init__(self, dimension, point_list)
         self.domain = domain
         self.distribution = distribution
-        self.point_list_test = []
         self.size_of_data_set = size_of_data_set
 
     def genarate(self, save_file_name=None):
@@ -80,7 +79,7 @@ class RandomDataGenerator(DataProvider):
             vct= np.random.randint(self.domain, size=(self.size_of_data_set, self.dimension)).tolist()[0]
             point = Point(vct)
             if self.distant_enough(point, delta, data_set):
-                self.point_list_test.append(point)
+                self.point_list.append(point)
                 number_of_vector += 1
             number_of_test += 1
             if number_of_test >= 100*len(data_set):
@@ -88,7 +87,7 @@ class RandomDataGenerator(DataProvider):
                 assert(False)
 
         if save_file_name:
-            pd.DataFrame(list_of_distant_vector).to_csv(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name),
+            pd.DataFrame(self.point_list).to_csv(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name),
                                                         encoding='utf-8')
 
 
