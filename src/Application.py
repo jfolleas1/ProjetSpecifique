@@ -5,6 +5,7 @@ import configparser
 from pathlib import Path
 from src.providerData.ReaderFromFile import ReaderFromFile
 from src.discretisator.RectangleDiscretisator import RectangleDiscretisator
+from src.BloomFilter.BloomFilterTester import BloomFilterTester
 # -----------------------------------------------------------------------------------------
 # Constant
 PATH_CONFIG = './src/config.ini'
@@ -20,6 +21,8 @@ COMMON = 'Common'
 PATH_FILE = 'pathToFile'
 DIMENSION = 'dimension'
 LAMBDA_ERROR = 'lambdaError'
+M = 'm'
+N= 'n'
 # -----------------------------------------------------------------------------------------
 # Code
 
@@ -34,6 +37,8 @@ def main():
     logger = Logger('Main')
     logger.info('begin operation on bloom filter')
 
+    # ---------------------------------------------------------------
+    # Get parameters from config file
     config_file = Path(PATH_CONFIG)
     print(str(config_file))
     if not config_file.is_file():
@@ -42,13 +47,17 @@ def main():
 
     config = configparser.ConfigParser()
     config.read(PATH_CONFIG)
-    reader, discritisator = getParameters (logger, config)
+    reader, discritisator, n, m = get_parameters (logger, config)
 
-    # TODO call Bloom filter method.
+    # Build the Bloom filter.
+    bloom_filter = BloomFilterTester(n,m,reader.get_point(),discritisator)
+    # TODO change read point to read point that should be tested.
+    nb_point_in_bloom_filter = bloom_filter.test_set_points(reader.get_point())
+    print(nb_point_in_bloom_filter)
 
+    #TODO : visiualise result.
 
-
-def getParameters (logger, config):
+def get_parameters (logger, config):
     """
     Get parameters in config file and create the reader and the discretisator associated with the right parameters.
     :param logger: instance allowing to log
@@ -58,6 +67,8 @@ def getParameters (logger, config):
     try:
         reader = None
         discritisator = None
+        m = None
+        n = None
 
         # Select readers
         if READER_FROM_FILE in config.sections():
@@ -74,11 +85,15 @@ def getParameters (logger, config):
         elif CIRCLE_DISCRITISATOR in config.sections():
             pass
 
-        if reader is None or discritisator is None:
+        if COMMON in config.sections():
+            m =  RectangleDiscretisator(config[COMMON][M])
+            n = RectangleDiscretisator(config[COMMON][N])
+
+        if reader is None or discritisator is None or m is None or n is None:
             logger.error('The config file lacks of information to continue')
             raise Exception()
 
-        return reader, discritisator
+        return reader, discritisator, n, m
 
     except Exception as e:
         logger.error('Probleme in getting key in config file')

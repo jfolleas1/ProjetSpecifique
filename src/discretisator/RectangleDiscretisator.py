@@ -34,16 +34,18 @@ class RectangleDiscretisator(Discretisator):
         return res
 
     def discretise_point(self, point):
-        point_c = deepcopy(point) # TODO ???
+        #deepcopy the point given in parmeter to prevent instruction to modify it and be able able to use it again without modification
+        point_c = deepcopy(point)
         results = []
-        results.append(self.maximizePoint(point_c.coordinates))
+        results.append(Point(self.maximizePoint(point_c.coordinates)))
         self.discretise_recursive(point_c.coordinates, point.coordinates, 0, results)
         return self.make_points(results)
 
-    def discretise_recursive(self, maximised_point, original_point, starting_index, results):
-        for i in range(starting_index, len(maximised_point)):
-            if maximised_point[i] != original_point[i]:
-                point_c = maximised_point[:] # TODO ????
+    def discretise_recursive(self, point, original_point, starting_index, results):
+        for i in range(starting_index, len(point)):
+            if point[i] != original_point[i]:
+                #For the next passage in the loop the original value of point is needed so deepcopy
+                point_c = point[:] # TODO ????
                 point_c[i] -= self.lambda_error
-                results.append(point_c)
+                results.append(Point(point_c))
                 self.discretise_recursive(point_c, original_point, i+1, results)
