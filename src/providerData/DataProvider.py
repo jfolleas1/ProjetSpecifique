@@ -6,7 +6,7 @@
 
 import abc
 from src.util.Logger import Logger
-logger = Logger()
+logger = Logger('Data provider')
 
 
 
@@ -24,9 +24,9 @@ class DataProvider:
     __metaclass__ = abc.ABCMeta
 
 
-    def __init__(self, dimension, size_of_data_set):
+    def __init__(self, dimension, point_list=[]):
         self.dimension = dimension
-        self.size_of_data_set = size_of_data_set
+        self.point_list = point_list
 
     @abc.abstractmethod
     def get_points(self):

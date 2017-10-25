@@ -39,7 +39,7 @@ class RectangleDiscretisator(Discretisator):
         results = []
         results.append(Point(self.maximizePoint(point_c.coordinates)))
         self.discretise_recursive(point_c.coordinates, point.coordinates, 0, results)
-        return self.make_points(results)
+        return results
 
     def discretise_recursive(self, point, original_point, starting_index, results):
         for i in range(starting_index, len(point)):

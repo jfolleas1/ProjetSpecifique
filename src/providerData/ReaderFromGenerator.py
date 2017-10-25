@@ -24,11 +24,12 @@ class RandomDataGenerator(DataProvider):
         - x (10 > x >= 1): x normal laws superposed
     :param point_list: DataFrame that contain the data points:
     """
-    def __init__(self, dimension, size_of_data_set, domain, distribution=0, point_list=[]):
-        DataProvider.__init__(self, dimension, size_of_data_set)
+    def __init__(self, dimension, size_of_data_set, domain, distribution=0):
+        DataProvider.__init__(self, dimension, [])
         self.domain = domain
         self.distribution = distribution
-        self.point_list = point_list
+        self.point_list_test = []
+        self.size_of_data_set = size_of_data_set
 
     def genarate(self, save_file_name=None):
         """
@@ -69,18 +70,15 @@ class RandomDataGenerator(DataProvider):
         :return: Nothing
         """
         number_of_vector = 0
-        list_of_distant_vector = []
         while number_of_vector < self.size_of_data_set:
             vct= np.random.randint(self.domain, size=(self.size_of_data_set, self.dimension)).tolist()[0]
             point = Point(self.dimension, vct)
             if self.distant_enough(delta, data_set):
-                self.point_list.append(point)
-                if save_file_name:
-                    list_of_distant_vector.append(vct)
+                self.point_list_test.append(point)
                 number_of_vector += 1
 
         if save_file_name:
-            pd.DataFrame(list_of_distant_vector).to_csv(save_file_name, encoding='utf-8')
+            pd.DataFrame(self.point_list_test).to_csv(save_file_name, encoding='utf-8')
 
 
     #@overrides(DataProvider)
