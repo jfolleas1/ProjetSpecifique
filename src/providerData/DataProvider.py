@@ -6,7 +6,7 @@
 
 import abc
 from src.util.Logger import Logger
-logger = Logger()
+logger = Logger("DataProvider")
 
 
 
