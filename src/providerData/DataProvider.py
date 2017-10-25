@@ -6,14 +6,13 @@
 
 import abc
 from src.util.Logger import Logger
-logger = Logger()
-
-
 
 # --------- Constant
 
 
 # --------- Code
+logger = Logger("DataProvider")
+
 class DataProvider:
     """
     This class is the interface for all data providers. The data provided will be use by the Bloom filter.
@@ -24,9 +23,9 @@ class DataProvider:
     __metaclass__ = abc.ABCMeta
 
 
-    def __init__(self, dimension, size_of_data_set):
+    def __init__(self, dimension):
         self.dimension = dimension
-        self.size_of_data_set = size_of_data_set
+        self.point_list = []
 
     @abc.abstractmethod
     def get_points(self):

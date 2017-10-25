@@ -23,12 +23,12 @@ class Point:
     :param coordinate: list of int that are the coordinate of the vector
     """
     def __init__(self, coordinates):
-        self.coordinates = coordinates
-        assert(type(coordinates) == list)
+        assert (type(coordinates) == list)
+        self.coordinates = list(map((lambda x: float(x)), coordinates))
         self.dimension = len(coordinates)
 
     def __eq__(self, other):
-        return set(self.coordinates) == set(other.coordinates)
+        return self.distance(other) == 0
 
     def __repr__(self):
 

@@ -1,16 +1,21 @@
 # -----------------------------------------------------------------------------------------
 # Import
-
+import os
 import pandas as pd
 import numpy as np
 from src.providerData.DataProvider import DataProvider
 from src.structureData.Point import Point
+from src.util.Logger import Logger
 # -----------------------------------------------------------------------------------------
 # Constant
+
+DATA_FOLDER = "../../data"
 
 
 # -----------------------------------------------------------------------------------------
 # Code
+
+logger = Logger("RandomDataGenerator")
 
 class RandomDataGenerator(DataProvider):
     """
@@ -24,11 +29,12 @@ class RandomDataGenerator(DataProvider):
         - x (10 > x >= 1): x normal laws superposed
     :param point_list: DataFrame that contain the data points:
     """
-    def __init__(self, dimension, size_of_data_set, domain, distribution=0, point_list=[]):
-        DataProvider.__init__(self, dimension, size_of_data_set)
+    def __init__(self, dimension, size_of_data_set=1000, domain=10000, distribution=0):
+        DataProvider.__init__(self, dimension)
+        print("IN CONST : "  + str(len(self.point_list)))
         self.domain = domain
         self.distribution = distribution
-        self.point_list = point_list
+        self.size_of_data_set = size_of_data_set
 
     def genarate(self, save_file_name=None):
         """
@@ -39,10 +45,10 @@ class RandomDataGenerator(DataProvider):
         """
         array_vector = np.random.randint(self.domain, size=(self.size_of_data_set, self.dimension))
         for vct in array_vector:
-            self.point_list.append(Point(self.dimension, vct))
+            self.point_list.append(Point(list(vct)))
         if save_file_name:
             vector_data_frame_ = pd.DataFrame(array_vector)
-            vector_data_frame_.to_csv(save_file_name, encoding='utf-8')
+            vector_data_frame_.to_csv(os.path.join(os.getcwd(),DATA_FOLDER,save_file_name), encoding='utf-8')
 
     @staticmethod
     def distant_enough(point, delta, data_set):
@@ -69,21 +75,24 @@ class RandomDataGenerator(DataProvider):
         :return: Nothing
         """
         number_of_vector = 0
-        list_of_distant_vector = []
+        number_of_test = 0
+        array_vector = []
         while number_of_vector < self.size_of_data_set:
             vct= np.random.randint(self.domain, size=(self.size_of_data_set, self.dimension)).tolist()[0]
-            point = Point(self.dimension, vct)
-            if self.distant_enough(delta, data_set):
+            point = Point(vct)
+            if self.distant_enough(point, delta, data_set):
                 self.point_list.append(point)
-                if save_file_name:
-                    list_of_distant_vector.append(vct)
+                array_vector.append(vct)
                 number_of_vector += 1
-
+            number_of_test += 1
+            if number_of_test >= 1000*len(data_set):
+                logger.error("infinit loop to construct different")
+                assert(False)
         if save_file_name:
-            pd.DataFrame(list_of_distant_vector).to_csv(save_file_name, encoding='utf-8')
+            pd.DataFrame(array_vector).to_csv(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name), encoding='utf-8')
 
 
-    #@overrides(DataProvider)
+    # overrides(DataProvider)
     def get_points(self):
 
         """

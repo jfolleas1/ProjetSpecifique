@@ -7,8 +7,8 @@ class PointTest(unittest.TestCase):
 
     def setUp(self):
         """Initialize tests."""
-        self.point_a = Point(2, [1,2])
-        self.point_b = Point(2, [4,6])
+        self.point_a = Point([1,2])
+        self.point_b = Point([4,6])
 
     def test_distance(self):
         """Test of function distance."""

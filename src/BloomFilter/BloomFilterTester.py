@@ -66,18 +66,17 @@ class BloomFilterTester:
         :param pt: the point that we want to check
         :return: Boolean at true if the answer is yes, False otherwise
         """
-        return pt in self.bloom_filter
+        return pt.to_string() in self.bloom_filter
 
-    def test_set_points(self, points):
+    def test_set_points(self, points, discretizor = None):
         """
         Ask the number of element wich are in the indexed set and in the :points: set
         :param points: The set that we want to check
         :return: The size of the intersection
         """
-        number_of_positif = 0
-        for pt in points:
-            if self.test_one_point(pt):
-                number_of_positif += 1
-        return number_of_positif
-
-        # TODO test the size of the Bloom filter
+        if discretizor:
+            number_of_positif = 0
+            for pt in points:
+                if self.test_one_point(discretizor.discretise_point_to_one(pt)):
+                    number_of_positif += 1
+            return number_of_positif
