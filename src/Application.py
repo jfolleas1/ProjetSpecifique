@@ -6,9 +6,11 @@ from pathlib import Path
 from src.providerData.ReaderFromFile import ReaderFromFile
 from src.discretisator.RectangleDiscretisator import RectangleDiscretisator
 from src.BloomFilter.BloomFilterTester import BloomFilterTester
+from src.util.DataVisualisation import visualize_curve
+import os
 # -----------------------------------------------------------------------------------------
 # Constant
-PATH_CONFIG = './src/config.ini'
+PATH_CONFIG = './config/'
 
 # HEADLINE-----------------------------------------
 READER_FROM_FILE = 'ReaderFromFile'
@@ -16,6 +18,7 @@ GENERATE_POINT = 'GeneratePoint'
 RECTANGLE_DISCRITISATOR = 'RectangleDiscritisator'
 CIRCLE_DISCRITISATOR = 'CircleDiscritisator'
 COMMON = 'Common'
+
 
 # SUBTITLE -----------------------------------------
 PATH_FILE_FEED = 'pathToFileFeed'
@@ -28,10 +31,7 @@ M = 'm'
 
 def main():
     """
-    Run the application:
-        - instanciate reader and discritisator.
-        - Call method to create the Bloom filter.
-        - display result.
+        loop throught all config file and display result.
     :return:
     """
     logger = Logger('Main')
@@ -39,25 +39,36 @@ def main():
 
     # ---------------------------------------------------------------
     # Get parameters from config file
-    config_file = Path(PATH_CONFIG)
-    print(str(config_file))
+    list_visualisation = []
+    for fn in os.listdir(PATH_CONFIG):
+        list_visualisation.append(run_test_on_bloom_filter(logger, PATH_CONFIG, fn))
+
+    visualize_curve(list_visualisation,"test_x", "test_y","title")
+
+
+def run_test_on_bloom_filter(logger, Path_config, file_name):
+    """
+    Run the application:
+        - instanciate reader and discritisator.
+        - Call method to create the Bloom filter.
+        - display result.
+    :return:
+    """
+    config_file = Path(Path_config + file_name)
     if not config_file.is_file():
         logger.error('The config file does not exist')
         raise Exception()
 
+    logger.info('Read config information on : ' + str(Path_config + file_name))
     config = configparser.ConfigParser()
-    config.read(PATH_CONFIG)
-    list_point_feed, list_point_test, discritisator, m = get_parameters (logger, config)
+    config.read(Path_config + file_name)
+    list_point_feed, list_point_test, discritisator, m = get_parameters(logger, config)
 
     # Build the Bloom filter.
     bloom_filter = BloomFilterTester(len(list_point_feed), m, list_point_feed, discritisator)
     nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test)
-    print(nb_point_in_bloom_filter)
 
-    #TODO : visiualise resutl
-
-def run_test_on_bloom_filter():
-    pass
+    return ("Test", [m/len(list_point_feed)], [nb_point_in_bloom_filter])
 
 def get_parameters (logger, config):
     """

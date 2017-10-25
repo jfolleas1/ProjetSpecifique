@@ -15,7 +15,7 @@ from copy import deepcopy
 # --------- Code
 class RectangleDiscretisator(Discretisator):
     """
-
+        TODO
     """
 
     def __init__(self, lambda_error):
