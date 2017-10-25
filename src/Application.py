@@ -18,11 +18,11 @@ CIRCLE_DISCRITISATOR = 'CircleDiscritisator'
 COMMON = 'Common'
 
 # SUBTITLE -----------------------------------------
-PATH_FILE = 'pathToFile'
+PATH_FILE_FEED = 'pathToFileFeed'
 DIMENSION = 'dimension'
 LAMBDA_ERROR = 'lambdaError'
+PATH_FILE_TEST = 'pathToFileTest'
 M = 'm'
-N= 'n'
 # -----------------------------------------------------------------------------------------
 # Code
 
@@ -47,15 +47,17 @@ def main():
 
     config = configparser.ConfigParser()
     config.read(PATH_CONFIG)
-    reader, discritisator, n, m = get_parameters (logger, config)
+    list_point_feed, list_point_test, discritisator, m = get_parameters (logger, config)
 
     # Build the Bloom filter.
-    bloom_filter = BloomFilterTester(n,m,reader.get_point(),discritisator)
-    # TODO change read point to read point that should be tested.
-    nb_point_in_bloom_filter = bloom_filter.test_set_points(reader.get_point())
+    bloom_filter = BloomFilterTester(len(list_point_feed), m, list_point_feed, discritisator)
+    nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test)
     print(nb_point_in_bloom_filter)
 
-    #TODO : visiualise result.
+    #TODO : visiualise resutl
+
+def run_test_on_bloom_filter():
+    pass
 
 def get_parameters (logger, config):
     """
@@ -65,17 +67,23 @@ def get_parameters (logger, config):
     :return: reader, discritisator with config found in config file.
     """
     try:
-        reader = None
         discritisator = None
         m = None
-        n = None
+        list_point_feed = None
+        list_point_test = None
 
         # Select readers
         if READER_FROM_FILE in config.sections():
-            reader = ReaderFromFile(config[READER_FROM_FILE][DIMENSION],
-                                    config[READER_FROM_FILE][PATH_FILE])
+            reader_feed = ReaderFromFile(int(config[READER_FROM_FILE][DIMENSION]),
+                                    config[READER_FROM_FILE][PATH_FILE_FEED])
+            list_point_feed = reader_feed.get_points()
+
+            reader_test = ReaderFromFile(int(config[READER_FROM_FILE][DIMENSION]),
+                                    config[READER_FROM_FILE][PATH_FILE_TEST])
+            list_point_test = reader_test.get_points()
 
         elif GENERATE_POINT in config.sections():
+            #TODO
             pass
 
         # select discritisator
@@ -83,17 +91,21 @@ def get_parameters (logger, config):
             discritisator = RectangleDiscretisator(config[RECTANGLE_DISCRITISATOR][LAMBDA_ERROR])
 
         elif CIRCLE_DISCRITISATOR in config.sections():
+            #TODO
             pass
 
-        if COMMON in config.sections():
-            m =  RectangleDiscretisator(config[COMMON][M])
-            n = RectangleDiscretisator(config[COMMON][N])
 
-        if reader is None or discritisator is None or m is None or n is None:
+        if COMMON in config.sections():
+            m = config[COMMON][M]
+
+        if list_point_feed is None or \
+                        list_point_test is None or \
+                        discritisator is None or \
+                        m is None:
             logger.error('The config file lacks of information to continue')
             raise Exception()
 
-        return reader, discritisator, n, m
+        return list_point_feed, list_point_test, discritisator, int(m)
 
     except Exception as e:
         logger.error('Probleme in getting key in config file')

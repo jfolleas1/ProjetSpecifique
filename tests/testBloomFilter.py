@@ -25,4 +25,3 @@ class PointTest(unittest.TestCase):
     def test_test_set_points(self):
         """Test if the check a all set of point work"""
         self.assertEqual(4,self.bf_tester.test_set_points(self.discretized_points), "error in test_test_set_points")
-

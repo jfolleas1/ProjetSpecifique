@@ -30,10 +30,11 @@ class RandomDataGenerator(DataProvider):
     :param point_list: DataFrame that contain the data points:
     """
     def __init__(self, dimension, size_of_data_set=1000, domain=10000, distribution=0, point_list=[]):
-        DataProvider.__init__(self, dimension, size_of_data_set)
+        DataProvider.__init__(self, dimension, [])
         self.domain = domain
         self.distribution = distribution
-        self.point_list = point_list
+        self.point_list_test = []
+        self.size_of_data_set = size_of_data_set
 
     def genarate(self, save_file_name=None):
         """
@@ -75,14 +76,11 @@ class RandomDataGenerator(DataProvider):
         """
         number_of_vector = 0
         number_of_test = 0
-        list_of_distant_vector = []
         while number_of_vector < self.size_of_data_set:
             vct= np.random.randint(self.domain, size=(self.size_of_data_set, self.dimension)).tolist()[0]
             point = Point(vct)
             if self.distant_enough(point, delta, data_set):
-                self.point_list.append(point)
-                if save_file_name:
-                    list_of_distant_vector.append(vct)
+                self.point_list_test.append(point)
                 number_of_vector += 1
             number_of_test += 1
             if number_of_test >= 100*len(data_set):
