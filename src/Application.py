@@ -47,6 +47,7 @@ def main():
     # TODO call Bloom filter method.
 
 
+
 def getParameters (logger, config):
     """
     Get parameters in config file and create the reader and the discretisator associated with the right parameters.

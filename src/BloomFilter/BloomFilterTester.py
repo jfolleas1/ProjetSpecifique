@@ -53,7 +53,9 @@ class BloomFilterTester:
         """
         if discretisator:
             for pt in points:
+                print("UPER LOOP : " + pt.to_string())
                 for d_pt in discretisator.discretise_point(pt):
+                    print(d_pt.to_string())
                     self.bloom_filter.add(d_pt.to_string())
         else:
             for pt in points:
@@ -66,7 +68,7 @@ class BloomFilterTester:
         :param pt: the point that we want to check
         :return: Boolean at true if the answer is yes, False otherwise
         """
-        return pt in self.bloom_filter
+        return pt.to_string() in self.bloom_filter
 
     def test_set_points(self, points):
         """
@@ -79,5 +81,3 @@ class BloomFilterTester:
             if self.test_one_point(pt):
                 number_of_positif += 1
         return number_of_positif
-
-        # TODO test the size of the Bloom filter
