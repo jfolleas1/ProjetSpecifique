@@ -29,8 +29,9 @@ class RandomDataGenerator(DataProvider):
         - x (10 > x >= 1): x normal laws superposed
     :param point_list: DataFrame that contain the data points:
     """
-    def __init__(self, dimension, size_of_data_set=1000, domain=10000, distribution=0, point_list=[]):
-        DataProvider.__init__(self, dimension, point_list)
+    def __init__(self, dimension, size_of_data_set=1000, domain=10000, distribution=0):
+        DataProvider.__init__(self, dimension)
+        print("IN CONST : "  + str(len(self.point_list)))
         self.domain = domain
         self.distribution = distribution
         self.size_of_data_set = size_of_data_set
@@ -75,20 +76,20 @@ class RandomDataGenerator(DataProvider):
         """
         number_of_vector = 0
         number_of_test = 0
+        array_vector = []
         while number_of_vector < self.size_of_data_set:
             vct= np.random.randint(self.domain, size=(self.size_of_data_set, self.dimension)).tolist()[0]
             point = Point(vct)
             if self.distant_enough(point, delta, data_set):
                 self.point_list.append(point)
+                array_vector.append(vct)
                 number_of_vector += 1
             number_of_test += 1
-            if number_of_test >= 100*len(data_set):
+            if number_of_test >= 1000*len(data_set):
                 logger.error("infinit loop to construct different")
                 assert(False)
-
         if save_file_name:
-            pd.DataFrame(self.point_list).to_csv(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name),
-                                                        encoding='utf-8')
+            pd.DataFrame(array_vector).to_csv(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name), encoding='utf-8')
 
 
     # overrides(DataProvider)

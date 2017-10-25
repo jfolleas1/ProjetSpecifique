@@ -23,9 +23,9 @@ class DataProvider:
     __metaclass__ = abc.ABCMeta
 
 
-    def __init__(self, dimension, point_list=[]):
+    def __init__(self, dimension):
         self.dimension = dimension
-        self.point_list = point_list
+        self.point_list = []
 
     @abc.abstractmethod
     def get_points(self):

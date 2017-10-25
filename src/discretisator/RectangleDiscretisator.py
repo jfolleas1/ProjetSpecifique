@@ -42,3 +42,13 @@ class RectangleDiscretisator(Discretisator):
                 point_c[i] -= self.lambda_error
                 results.append(Point(point_c))
                 self.discretise_recursive(point_c, original_point, i+1, results)
+
+    def discretise_point_to_one(self, point):
+        list_pt = self.discretise_point(point)
+        min_pt = list_pt.pop(0)
+        min_dist = point.distance(min_pt)
+        for pt in list_pt:
+            if point.distance(pt) < min_dist:
+                min_pt = pt
+                min_dist = point.distance(pt)
+        return min_pt
