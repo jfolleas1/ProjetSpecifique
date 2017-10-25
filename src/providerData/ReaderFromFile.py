@@ -5,6 +5,8 @@ from pathlib import Path
 from src.structureData.Point import Point
 from src.util.Logger import Logger
 from decimal import *
+import pandas as pd
+import numpy as np
 # -----------------------------------------------------------------------------------------
 # Constant
 SEPARATOR_COORDINATE = ","
@@ -35,19 +37,19 @@ class ReaderFromFile(DataProvider):
             self.logger.error('The file does not exist')
             raise Exception("The file does not exist"+ str(path_file))
 
-        line_counter = 0
+        data_file = pd.read_csv(str(path_file))
+        line_counter = -1
         try:
-            with open(str(path_file)) as file:
-                for line in file:
-                    line_counter += 1
-                    line = line.replace('\n', '')
-                    coodinates = [Decimal(elem) for elem in line.split(SEPARATOR_COORDINATE)]
+            for i, row in enumerate(data_file.values):
+                line_counter += 1
+                coodinates = [Decimal(int(elem)) for index, elem in enumerate(row) if index != 0]
+                print(coodinates)
 
-                    # We get a dimension problem.
-                    if len(coodinates)!= self.dimension:
-                        self.logger.error('The dimension is not correct, expected : '+ str(len(coodinates)) + str(self.dimension))
-                        raise Exception("The dimension of the point at line " + str(line_counter) + " is not correct")
-                    self.point_list.append(Point(coodinates))
+                # We get a dimension problem.
+                if len(coodinates)!= self.dimension:
+                    self.logger.error('The dimension is not correct, expected : '+ str(len(coodinates)) + str(self.dimension))
+                    raise Exception("The dimension of the point at line " + str(line_counter) + " is not correct")
+                self.point_list.append(Point(coodinates))
 
         except Exception as e:
             self.logger.error("Probleme during reading line " + str(line_counter))
