@@ -53,9 +53,7 @@ class BloomFilterTester:
         """
         if discretisator:
             for pt in points:
-                print("UPER LOOP : " + pt.to_string())
                 for d_pt in discretisator.discretise_point(pt):
-                    print(d_pt.to_string())
                     self.bloom_filter.add(d_pt.to_string())
         else:
             for pt in points:

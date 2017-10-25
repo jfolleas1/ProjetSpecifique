@@ -26,13 +26,6 @@ class RectangleDiscretisator(Discretisator):
             point[i] = Decimal(point[i]).quantize(self.lambda_error, decimal.ROUND_UP)
         return point
 
-    def make_points(self, list_coordonates):
-        res = []
-        for coord in list_coordonates:
-            float_coord = list(map((lambda x: float(x)), coord))
-            res.append(Point(float_coord))
-        return res
-
     def discretise_point(self, point):
         #deepcopy the point given in parmeter to prevent instruction to modify it and be able able to use it again without modification
         point_c = deepcopy(point)
@@ -45,7 +38,7 @@ class RectangleDiscretisator(Discretisator):
         for i in range(starting_index, len(point)):
             if point[i] != original_point[i]:
                 #For the next passage in the loop the original value of point is needed so deepcopy
-                point_c = point[:] # TODO ????
+                point_c = point[:] # TODO ???? deep copy
                 point_c[i] -= self.lambda_error
                 results.append(Point(point_c))
                 self.discretise_recursive(point_c, original_point, i+1, results)

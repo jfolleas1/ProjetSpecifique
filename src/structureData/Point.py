@@ -28,7 +28,7 @@ class Point:
         self.dimension = len(coordinates)
 
     def __eq__(self, other):
-        return set(self.coordinates) == set(other.coordinates)
+        return self.distance(other) == 0
 
     def __repr__(self):
 
