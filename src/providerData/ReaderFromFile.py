@@ -43,7 +43,6 @@ class ReaderFromFile(DataProvider):
             for i, row in enumerate(data_file.values):
                 line_counter += 1
                 coodinates = [Decimal(int(elem)) for index, elem in enumerate(row) if index != 0]
-                print(coodinates)
 
                 # We get a dimension problem.
                 if len(coodinates)!= self.dimension:
