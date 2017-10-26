@@ -68,7 +68,7 @@ class BloomFilterTester:
         """
         return pt.to_string() in self.bloom_filter
 
-    def test_set_points(self, points, discretizor = None):
+    def test_set_points(self, points, discretizor):
         """
         Ask the number of element wich are in the indexed set and in the :points: set
         :param points: The set that we want to check

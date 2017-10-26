@@ -23,7 +23,7 @@ class ReaderFromFile(DataProvider):
     :param file_name: Name of file containing the data.
     """
     def __init__(self, dimension, file_path):
-        DataProvider.__init__(self, dimension, [])
+        DataProvider.__init__(self, dimension)
         self.file_path = file_path
         self.logger = Logger('ReaderFromFile')
 

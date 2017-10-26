@@ -11,7 +11,7 @@ import os
 # -----------------------------------------------------------------------------------------
 # Constant
 PATH_CONFIG = './config/'
-LIMIT_FALSE_POSITIVE = 10
+LIMIT_FALSE_POSITIVE = 30
 
 # HEADLINE-----------------------------------------
 READER_FROM_FILE = 'ReaderFromFile'
@@ -43,10 +43,10 @@ def main():
     for config_file in os.listdir(PATH_CONFIG):
         list_visualisation.append(run_test_on_bloom_filter(logger, PATH_CONFIG, config_file))
 
-    visualize_curve(list_visualisation,"test_x", "test_y","title")
+    visualize_curve(list_visualisation, "ratio m/n", "false positive","graph allowing comparaison between different Bloom filter")
 
 
-def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Rectangle discritisator : "):
+def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Rectangle discritisator, using dimension : "):
     """
     Run the application:
         - instanciate reader and discritisator.
@@ -66,7 +66,7 @@ def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Rectangle 
 
     # Build the Bloom filter.
     list_ratio, false_positive_rate = create_bloom_filters(logger, list_point_feed, list_point_test, discritisator, m)
-    return (title + str(delta_error) , list_ratio, false_positive_rate)
+    return (title + str(len(list_point_feed[0].coordinates)) , list_ratio, false_positive_rate)
 
 
 def create_bloom_filters(logger, list_point_feed, list_point_test, discritisator, m):
@@ -80,18 +80,16 @@ def create_bloom_filters(logger, list_point_feed, list_point_test, discritisator
         diffFalsePositive = LIMIT_FALSE_POSITIVE + 1
         while diffFalsePositive > LIMIT_FALSE_POSITIVE :
             bloom_filter = BloomFilterTester(len(list_point_feed), m, list_point_feed, discritisator)
-            nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test)
+            nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test, discritisator)
             ratio_size = m/len(list_point_feed)
-
-            #if (ratio_size > 1):
-            #    return list_ratio, false_positive_rate
 
             # Add result to the list.
             list_ratio.append(ratio_size)
             false_positive_rate.append(nb_point_in_bloom_filter)
             diffFalsePositive = nb_point_in_bloom_filter
+            print(diffFalsePositive)
             # increase m parameters
-            m = m * 2
+            m = m + m
 
     except Exception as e:
         logger.error('Impossible to compute Bloom filter of size : ' + str(m))
@@ -129,7 +127,7 @@ def get_parameters (logger, config):
 
         # select discritisator
         if RECTANGLE_DISCRITISATOR in config.sections():
-            delta_error = config[RECTANGLE_DISCRITISATOR][LAMBDA_ERROR]
+            delta_error = float(config[RECTANGLE_DISCRITISATOR][LAMBDA_ERROR])
             discritisator = RectangleDiscretisator(delta_error)
 
         elif CIRCLE_DISCRITISATOR in config.sections():
