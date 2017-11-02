@@ -4,6 +4,7 @@ from src.util.Logger import Logger
 import configparser
 from pathlib import Path
 from src.providerData.ReaderFromFile import ReaderFromFile
+from src.providerData.ReaderFromGenerator import RandomDataGenerator
 from src.discretisator.RectangleDiscretisator import RectangleDiscretisator
 from src.BloomFilter.BloomFilterTester import BloomFilterTester
 from src.util.DataVisualisation import visualize_curve
@@ -24,9 +25,14 @@ COMMON = 'Common'
 # SUBTITLE -----------------------------------------
 PATH_FILE_FEED = 'pathToFileFeed'
 DIMENSION = 'dimension'
-LAMBDA_ERROR = 'lambdaError'
+DELTA_ERROR = 'DeltaError'
 PATH_FILE_TEST = 'pathToFileTest'
 M = 'm'
+SIZE_DATA = 'size_data'
+DOMAIN = 'domain'
+FILE_NAME_TEST = 'file_name_test'
+FILE_NAME_FEED = 'file_name_feed'
+TEST_WRITE = "test_write"
 # -----------------------------------------------------------------------------------------
 # Code
 
@@ -44,10 +50,10 @@ def main():
     for config_file in os.listdir(PATH_CONFIG):
         list_visualisation.append(run_test_on_bloom_filter(logger, PATH_CONFIG, config_file))
 
-    visualize_curve(list_visualisation, "ratio m/n", " rate false positive (%)","graph allowing comparaison between different Bloom filter")
+    visualize_curve(list_visualisation, "ratio m/n", " rate false positive (%)", " Graph allowing comparaison between different Bloom filter")
 
 
-def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Rectangle discritisator, using dimension : "):
+def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Delta : " +str(10*100/1000000)+ ", Dimension : " ):
     """
     Run the application:
         - instanciate reader and discritisator.
@@ -67,7 +73,7 @@ def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Rectangle 
 
     # Build the Bloom filter.
     list_ratio, false_positive_rate = create_bloom_filters(logger, list_point_feed, list_point_test, discritisator, m)
-    return (title + str(len(list_point_feed[0].coordinates)) , list_ratio, false_positive_rate)
+    return (title + str(int(config[GENERATE_POINT][DIMENSION])), list_ratio, false_positive_rate)
 
 
 def create_bloom_filters(logger, list_point_feed, list_point_test, discritisator, m):
@@ -127,12 +133,37 @@ def get_parameters (logger, config):
             list_point_test = reader_test.get_points()
 
         elif GENERATE_POINT in config.sections():
-            #TODO
-            pass
+
+            size_of_data_set = int(config[GENERATE_POINT][SIZE_DATA])
+            domain = int(config[GENERATE_POINT][DOMAIN])
+            test_write_file = config[GENERATE_POINT][TEST_WRITE]
+
+            data_from_generator_feed = RandomDataGenerator(int(config[GENERATE_POINT][DIMENSION]),
+                                                           size_of_data_set,
+                                                           domain)
+            data_from_generator_test = RandomDataGenerator(int(config[GENERATE_POINT][DIMENSION]),
+                                                           size_of_data_set,
+                                                           domain)
+            # We have to save the value.
+            if test_write_file == 'True':
+                file_name_test = config[GENERATE_POINT][FILE_NAME_TEST]
+                file_name_feed = config[GENERATE_POINT][FILE_NAME_FEED]
+                data_from_generator_feed.genarate(file_name_feed)
+                data_from_generator_test.genarate_falses(float(config[COMMON][DELTA_ERROR]),
+                                                         data_from_generator_feed.get_points(),
+                                                         save_file_name=file_name_test)
+            # We generate value without saving
+            else :
+                data_from_generator_feed.genarate()
+                data_from_generator_test.genarate_falses(float(config[COMMON][DELTA_ERROR]),
+                                                         data_from_generator_feed.get_points())
+
+            list_point_feed = data_from_generator_feed.get_points()
+            list_point_test = data_from_generator_test.get_points()
 
         # select discritisator
         if RECTANGLE_DISCRITISATOR in config.sections():
-            delta_error = float(config[RECTANGLE_DISCRITISATOR][LAMBDA_ERROR])
+            delta_error = float(config[COMMON][DELTA_ERROR])
             discritisator = RectangleDiscretisator(delta_error)
 
         elif CIRCLE_DISCRITISATOR in config.sections():
