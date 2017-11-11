@@ -9,17 +9,20 @@ from src.discretisator.RectangleDiscretisator import RectangleDiscretisator
 from src.BloomFilter.BloomFilterTester import BloomFilterTester
 from src.util.DataVisualisation import visualize_curve
 import os
+from src.discretisator.Arf import Arf
 # -----------------------------------------------------------------------------------------
 # Constant
 PATH_CONFIG = './config/'
 LIMIT_FALSE_POSITIVE = 10
 LIMIT_LOOP = 250
+PATH_TO_ARF = 'arf/'
 
 # HEADLINE-----------------------------------------
 READER_FROM_FILE = 'ReaderFromFile'
 GENERATE_POINT = 'GeneratePoint'
 RECTANGLE_DISCRITISATOR = 'RectangleDiscritisator'
 CIRCLE_DISCRITISATOR = 'CircleDiscritisator'
+ARF = 'Arf'
 COMMON = 'Common'
 
 # SUBTITLE -----------------------------------------
@@ -33,6 +36,7 @@ DOMAIN = 'domain'
 FILE_NAME_TEST = 'file_name_test'
 FILE_NAME_FEED = 'file_name_feed'
 TEST_WRITE = "test_write"
+DOMAIN_POW = "domainPow"
 # -----------------------------------------------------------------------------------------
 # Code
 
@@ -69,10 +73,20 @@ def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Dimension 
     logger.info('Read config information on : ' + str(Path_config + file_name))
     config = configparser.ConfigParser()
     config.read(Path_config + file_name)
-    list_point_feed, list_point_test, discritisator, m, delta_error = get_parameters(logger, config)
+    list_ratio = []
+    false_positive_rate = []
 
-    # Build the Bloom filter.
-    list_ratio, false_positive_rate = create_bloom_filters(logger, list_point_feed, list_point_test, discritisator, m)
+    if ARF in config.sections():
+        arf = Arf(PATH_TO_ARF)
+        argv = get_argv(logger, config)
+        list_ratio, false_positive_rate = compute_arf(logger, argv, arf, config)
+
+    else:
+        list_point_feed, list_point_test, discritisator, m, delta_error = get_parameters(logger, config)
+
+        # Build the Bloom filter.
+        list_ratio, false_positive_rate = create_bloom_filters(logger, list_point_feed, list_point_test,
+                                                               discritisator, m)
     return (title + str(float(config[COMMON][DELTA_ERROR])*100/float(config[GENERATE_POINT][DOMAIN])) + " %",
             list_ratio, false_positive_rate)
 
@@ -104,7 +118,7 @@ def create_bloom_filters(logger, list_point_feed, list_point_test, discritisator
             nb_loop += 1
 
     except Exception as e:
-        logger.error('Impossible to compute Bloom filter of size : ' + str(m))
+        logger.error('Impossible to compute Bloom filter of size : ' + str(current_m))
         raise e
 
     return list_ratio, false_positive_rate
@@ -167,6 +181,7 @@ def get_parameters (logger, config):
             delta_error = float(config[COMMON][DELTA_ERROR])
             discritisator = RectangleDiscretisator(delta_error)
 
+
         elif CIRCLE_DISCRITISATOR in config.sections():
             #TODO
             pass
@@ -187,5 +202,57 @@ def get_parameters (logger, config):
     except Exception as e:
         logger.error('Probleme in getting key in config file')
         raise e
+
+
+def get_argv(logger, config):
+    try:
+        dim = int(config[ARF][DIMENSION])
+        delta_error = float(config[COMMON][DELTA_ERROR])
+        domain_pow = float(config[ARF][DOMAIN_POW])
+        file_name_feed = config[ARF][FILE_NAME_FEED]
+        file_name_test = config[ARF][FILE_NAME_TEST]
+        size_data = int(config[ARF][SIZE_DATA])
+        m = int(config[COMMON][M])
+
+        # By default we use 8 * size_data for the filter.
+        return [str(domain_pow), str(delta_error), str(dim), str(size_data), str(64 * size_data * dim + m),
+                    file_name_feed, file_name_test]
+
+    except Exception as e:
+        logger.error('Probleme in getting key in config file')
+        raise e
+
+def compute_arf(logger, argv, arf, config):
+
+    try:
+        list_ratio = []
+        false_positive_rate = []
+        diffFalsePositive = LIMIT_FALSE_POSITIVE + 1
+        nb_loop = 0
+        current_m = int(argv[4])
+        size_filter = int(argv[3])
+
+        while (diffFalsePositive > LIMIT_FALSE_POSITIVE) and  (nb_loop < LIMIT_LOOP):
+            size_filter_real, false_positive = arf.execute_program(argv);
+
+            if size_filter !=  None and false_positive != None:
+                ratio_size = int(size_filter_real) / size_filter
+
+                # Add result to the list.
+                list_ratio.append(ratio_size)
+                false_positive_rate.append(int(false_positive) / size_filter)
+                diffFalsePositive = int(false_positive)
+                logger.debug("false positive rate : " + str(diffFalsePositive))
+
+            # increase loop parameters
+            current_m += int(config[COMMON][M])
+            argv[4] = str(current_m)
+            nb_loop += 1
+
+    except Exception as e:
+        logger.error('Impossible to compute Arf of size : ' + str(current_m))
+        raise e
+
+    return list_ratio, false_positive_rate
 
 main()
