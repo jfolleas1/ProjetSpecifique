@@ -205,6 +205,12 @@ def get_parameters (logger, config):
 
 
 def get_argv(logger, config):
+    """
+    Get arv for Arf
+    :param logger:
+    :param config: reference to the config file.
+    :return:
+    """
     try:
         dim = int(config[ARF][DIMENSION])
         delta_error = float(config[COMMON][DELTA_ERROR])
@@ -223,6 +229,14 @@ def get_argv(logger, config):
         raise e
 
 def compute_arf(logger, argv, arf, config):
+    """
+    Loop and call C++ Arf by increasing the size of the filter
+    :param logger:
+    :param argv: Argument, we have to pass to the shell.
+    :param arf: Arf Object.
+    :param config: Config file.
+    :return:
+    """
 
     try:
         list_ratio = []
