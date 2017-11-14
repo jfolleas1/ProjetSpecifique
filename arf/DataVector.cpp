@@ -146,43 +146,37 @@ DataVector DataVector::makeDifferent(const int & similarity, int number)
 	vector<int> myvector;
 	int myint;
 	int count;
+
 	//we build a random vector and verify if he is distance enough to all the vector in the data base by checking one by one
-	 for (int i =0 ; i < number ; i++)
-		{
-				count=0;
-				do
-				{	isdifferent=true;
-					myvector.erase(myvector.begin(),myvector.end());
-					 for (int u =0; u < different.dim ; u++)
-					{
-						myint = -1;
-						while(myint<1 || myint > domain )
-						myint =  rand();
-						myvector.push_back(myint);
-					}
+    for (int i =0 ; i < number ; i++){
+                count=0;
+                do{
+                    isdifferent=true;
+                    myvector.erase(myvector.begin(),myvector.end());
+                    for (int u =0; u < different.dim ; u++){
+                        myint = -1;
+                        while(myint<1 || myint > domain )
+                        myint =  rand();
+                        myvector.push_back(myint);
+                    }
 
-					for (std::vector< vector<int> >::iterator it = this->realElements.begin() ; it != this->realElements.end(); ++it)
-					{
-						islocalydifferent=false;
-						 for (int k =0; k < different.dim ; k++)
-						{
+                    for (std::vector< vector<int> >::iterator it = this->realElements.begin() ; it != this->realElements.end(); ++it){
+                        islocalydifferent=false;
+                         for (int k =0; k < different.dim ; k++){
+                            islocalydifferent|=( ((*it)[k]-myvector[k]>similarity) || ((*it)[k]-myvector[k]<(-1* similarity)) );
+                        }
 
-						islocalydifferent|=( ((*it)[k]-myvector[k]>similarity) || ((*it)[k]-myvector[k]<(-1* similarity)) );
-						}
-
-						isdifferent&=islocalydifferent;
-					}
-					if(count==10000)
-					{	break;
-						cout<<"PB lors du makeDifferent boucle infini"<<endl;
-					}
-					count++;
-				}while(!isdifferent);
-
-
-			different.realElements.push_back (myvector);
-		}
-	return different;
+                        isdifferent&=islocalydifferent;
+                    }
+                    if(count==10000){
+                        break;
+                        cout<<"PB lors du makeDifferent boucle infini"<<endl;
+                    }
+                    count++;
+                }while(!isdifferent);
+        different.realElements.push_back (myvector);
+    }
+    return different;
 }
 
 void DataVector::AddKey(ARF & myARF){
@@ -196,8 +190,8 @@ void DataVector::AddKey(ARF & myARF){
 void DataVector::checkPresence(ARF & myARF, bool different)
 {
 	
-	for (std::vector< vector<int> >::iterator it = this->realElements.begin() ; it != this->realElements.end(); ++it)
-	{	
+	for (std::vector< vector<int> >::iterator it = this->realElements.begin() ; it != this->realElements.end(); ++it){
+		cerr << "BEGIN LOOP" << endl;
 		myARF.CheckKey(*it, different);
 	}
 }

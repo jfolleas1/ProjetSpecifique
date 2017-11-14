@@ -45,6 +45,8 @@ int main (int argc, char* argv[]){
 	cerr << nameFileFeed << endl;
 	cerr << nameFileTest << endl;
 
+    // --------------------------------------------------------------------------------------
+    // Build the ARF
 	cerr << "load the data from file \r\n";
 	DataVector myDataBase(dim, numberOfKey , domainPow, minRangeSize, nameFileFeed);
 	myDataBase.toSet();
@@ -64,13 +66,15 @@ int main (int argc, char* argv[]){
 	cerr<<"SIZE: "<< myARF.Size() << "False positive" << myARF.getNumberOfFalsePositif() << endl;
 	// We reset the stats
 	myARF.resetStatistics();
-	
-	cerr<<" WO Training"<<endl; 
+
+	cerr<<" WO Training"<<endl;
 	myARF.resetStatistics();
 
+    // --------------------------------------------------------------------------------------
+    // Begin Test
 	DataVector myQuery1 (dim, numberOfKey , domainPow, minRangeSize, nameFileTest);
 	myQuery1.toSet();
-	cerr<<"checking"<<endl;
+	cerr<<"checking"<< endl;
 	myQuery1.checkPresenceAround(myARF, true, &myDataBase);
 
 	// display result.

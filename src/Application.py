@@ -57,7 +57,7 @@ def main():
     visualize_curve(list_visualisation, "ratio m/n", " rate false positive (%)", " Graph allowing comparaison between different Bloom filter")
 
 
-def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Dimension 3 using delta : " ):
+def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Dimension 1 using delta : " ):
     """
     Run the application:
         - instanciate reader and discritisator.
@@ -75,11 +75,12 @@ def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Dimension 
     config.read(Path_config + file_name)
     list_ratio = []
     false_positive_rate = []
+    domain = None
 
     if ARF in config.sections():
         arf = Arf(PATH_TO_ARF)
         argv = get_argv(logger, config)
-        list_ratio, false_positive_rate = compute_arf(logger, argv, arf, config)
+        list_ratio, false_positive_rate, domain = compute_arf(logger, argv, arf, config)
 
     else:
         list_point_feed, list_point_test, discritisator, m, delta_error = get_parameters(logger, config)
@@ -87,7 +88,10 @@ def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Dimension 
         # Build the Bloom filter.
         list_ratio, false_positive_rate = create_bloom_filters(logger, list_point_feed, list_point_test,
                                                                discritisator, m)
-    return (title + str(float(config[COMMON][DELTA_ERROR])*100/float(config[GENERATE_POINT][DOMAIN])) + " %",
+
+        domain = float(config[GENERATE_POINT][DOMAIN])
+
+    return (title + str(float(config[COMMON][DELTA_ERROR])*100/domain) + " %",
             list_ratio, false_positive_rate)
 
 
@@ -221,7 +225,7 @@ def get_argv(logger, config):
         m = int(config[COMMON][M])
 
         # By default we use 8 * size_data for the filter.
-        return [str(domain_pow), str(delta_error), str(dim), str(size_data), str(64 * size_data * dim + m),
+        return [str(domain_pow), str(delta_error), str(dim), str(size_data), str(64 * size_data * dim),
                     file_name_feed, file_name_test]
 
     except Exception as e:
@@ -245,6 +249,8 @@ def compute_arf(logger, argv, arf, config):
         nb_loop = 0
         current_m = int(argv[4])
         size_filter = int(argv[3])
+        domain = pow(2,float(argv[0])) * float(argv[1])
+        print(domain)
 
         while (diffFalsePositive > LIMIT_FALSE_POSITIVE) and  (nb_loop < LIMIT_LOOP):
             size_filter_real, false_positive = arf.execute_program(argv);
@@ -256,6 +262,7 @@ def compute_arf(logger, argv, arf, config):
                 list_ratio.append(ratio_size)
                 false_positive_rate.append(int(false_positive) / size_filter)
                 diffFalsePositive = int(false_positive)
+                logger.debug("real filter size: " + str(size_filter_real))
                 logger.debug("false positive rate : " + str(diffFalsePositive))
 
             # increase loop parameters
@@ -267,6 +274,6 @@ def compute_arf(logger, argv, arf, config):
         logger.error('Impossible to compute Arf of size : ' + str(current_m))
         raise e
 
-    return list_ratio, false_positive_rate
+    return list_ratio, false_positive_rate, domain
 
 main()

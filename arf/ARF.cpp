@@ -124,29 +124,31 @@ void ARF::AddKey(vector<int> & Key)
 }
 
 
-bool ARF::CheckKey(vector<int> & Key, bool different)
-{
+bool ARF::CheckKey(vector<int> & Key, bool different){
+    cerr << "Dimension : "<< this->dim << endl;
+    cerr << "Domain : "<< this->domain << endl;
+
     int rangeSize = (this->domain)/2;
     Node* currentNode = (Node*)this->root;
     Leaf* theDeepestLeaf = NULL;
     vector<int>  middle;
-    for (int i =0; i<this->dim; i++)
-    middle.push_back(domain/2); 
-       
-    theDeepestLeaf=this->navigate(currentNode, middle,rangeSize,Key);
+
+    for (int i = 0; i < this->dim; i++){
+        middle.push_back(domain/2);
+    }
+
+    cerr << "test" << endl;
+
+    theDeepestLeaf=this->navigate(currentNode, middle, rangeSize, Key);
     theDeepestLeaf->used=true;
-	if(theDeepestLeaf->GetValue())
-	{ 	
-		if(different)
-		numberOfFalsePositif++;
-		else
-		numberOfTruePositif++;
-	return true;
+	if(theDeepestLeaf->GetValue()){
+		if(different){numberOfFalsePositif++;}
+		else{numberOfTruePositif++;}
+	    return true;
 	}
-	else
-	{
+	else{
 		numberOfTrueNegatif++;
-	return false;
+	    return false;
 	}
 
 }
