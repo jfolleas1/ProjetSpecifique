@@ -9,7 +9,7 @@ from src.util.Logger import Logger
 # -----------------------------------------------------------------------------------------
 # Constant
 
-DATA_FOLDER = "../../data"
+DATA_FOLDER = "./data"
 
 
 # -----------------------------------------------------------------------------------------
@@ -31,7 +31,6 @@ class RandomDataGenerator(DataProvider):
     """
     def __init__(self, dimension, size_of_data_set=1000, domain=10000, distribution=0):
         DataProvider.__init__(self, dimension)
-        print("IN CONST : "  + str(len(self.point_list)))
         self.domain = domain
         self.distribution = distribution
         self.size_of_data_set = size_of_data_set

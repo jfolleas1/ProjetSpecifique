@@ -83,7 +83,7 @@ class Arf():
                 # clean the repo
                 command = './' + " ".join([NAME_EXECUTABLE] + argv)
                 self.logger.debug("size: "+ argv[4])
-                output = subprocess.check_output(command, shell=True )#, stderr=subprocess.PIPE)
+                output = subprocess.check_output(command, shell=True, stderr=subprocess.PIPE)
                 outputs = str(output).split("*");
                 size = outputs[1]
                 false_positive = outputs[3]

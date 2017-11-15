@@ -37,6 +37,7 @@ FILE_NAME_TEST = 'file_name_test'
 FILE_NAME_FEED = 'file_name_feed'
 TEST_WRITE = "test_write"
 DOMAIN_POW = "domainPow"
+TITLE = "title"
 # -----------------------------------------------------------------------------------------
 # Code
 
@@ -54,7 +55,7 @@ def main():
     for config_file in os.listdir(PATH_CONFIG):
         list_visualisation.append(run_test_on_bloom_filter(logger, PATH_CONFIG, config_file))
 
-    visualize_curve(list_visualisation, "ratio m/n", " rate false positive (%)", " Graph allowing comparaison between different Bloom filter")
+    visualize_curve(list_visualisation, "ratio m/n", " rate false positive (%)", "Dimension 1")
 
 
 def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Dimension 1 using delta : " ):
@@ -76,6 +77,7 @@ def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Dimension 
     list_ratio = []
     false_positive_rate = []
     domain = None
+    title = config[COMMON][TITLE]
 
     if ARF in config.sections():
         arf = Arf(PATH_TO_ARF)
@@ -250,7 +252,6 @@ def compute_arf(logger, argv, arf, config):
         current_m = int(argv[4])
         size_filter = int(argv[3])
         domain = pow(2,float(argv[0])) * float(argv[1])
-        print(domain)
 
         while (diffFalsePositive > LIMIT_FALSE_POSITIVE) and  (nb_loop < LIMIT_LOOP):
             size_filter_real, false_positive = arf.execute_program(argv);
