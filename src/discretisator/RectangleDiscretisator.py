@@ -5,8 +5,8 @@
 # -------- Import
 from src.discretisator.Discretisator import Discretisator
 from src.structureData.Point import Point
-import decimal
-from decimal import Decimal
+import src.discretisator.MethodType as Method
+
 from copy import deepcopy
 
 # --------- Constant
@@ -20,8 +20,8 @@ class RectangleDiscretisator(Discretisator):
     :param lambda_error: float representing how each coordinates of the points should be ceil or floor.
     """
 
-    def __init__(self, lambda_error):
-        Discretisator.__init__(self, lambda_error)
+    def __init__(self, lambda_error=0.001, method = Method.DIS_DOUBLE):
+        Discretisator.__init__(self, lambda_error, method)
 
     def minimisePoint(self, point):
         """
@@ -29,13 +29,20 @@ class RectangleDiscretisator(Discretisator):
         Args :
         :param point: coordinates which have to be maximised
         """
-        for i in range(0, len(point)):
-            ratio = int(point[i]/self.lambda_error);
-            if ratio%2 == 0:
-                point[i] = (ratio-1)*self.lambda_error
-            else:
+
+        if self.method_type == Method.DIS_DOUBLE:
+            for i in range(0, len(point)):
+                ratio = int(point[i]/self.lambda_error)
                 point[i] = ratio * self.lambda_error
+        else:
+            for i in range(0, len(point)):
+                ratio = int(point[i]/self.lambda_error);
+                if ratio%2 == 0:
+                    point[i] = (ratio-1)*self.lambda_error
+                else:
+                    point[i] = ratio * self.lambda_error
         return point
+
 
     def discretise_point(self, point):
         """
@@ -51,17 +58,20 @@ class RectangleDiscretisator(Discretisator):
         self.discretise_recursive(point_c.coordinates, point.coordinates, 0, results)
         return results
 
-    def discretise_recursive(self, point, original_point, starting_index, results):
+    def discretise_recursive(self, point, original_points, starting_index, results):
         """
         shouldn't be called directly, call for discretise
         """
         for i in range(starting_index, len(point)):
-            if point[i] != original_point[i]:
+            if point[i] != original_points[i]:
                 #the original value of point should be the same for each passage in the loop  so deepcopy
                 point_c = point[:]
-                point_c[i] += 2*self.lambda_error
+                if self.method_type == Method.DIS_DOUBLE:
+                    point_c[i] += self.lambda_error
+                else:
+                    point_c[i] += 2 * self.lambda_error
                 results.append(Point(point_c))
-                self.discretise_recursive(point_c, original_point, i+1, results)
+                self.discretise_recursive(point_c, original_points, i+1, results)
 
     def discretise_point_to_one(self, point):
         list_pt = self.discretise_point(point)

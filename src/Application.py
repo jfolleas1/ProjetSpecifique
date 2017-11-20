@@ -8,10 +8,11 @@ from src.providerData.ReaderFromGenerator import RandomDataGenerator
 from src.discretisator.RectangleDiscretisator import RectangleDiscretisator
 from src.BloomFilter.BloomFilterTester import BloomFilterTester
 from src.util.DataVisualisation import visualize_curve
+import src.discretisator.MethodType as Method
 import os
 # -----------------------------------------------------------------------------------------
 # Constant
-PATH_CONFIG = './config/'
+PATH_CONFIG = '../config/'
 LIMIT_FALSE_POSITIVE = 10
 LIMIT_LOOP = 250
 
@@ -21,6 +22,7 @@ GENERATE_POINT = 'GeneratePoint'
 RECTANGLE_DISCRITISATOR = 'RectangleDiscritisator'
 CIRCLE_DISCRITISATOR = 'CircleDiscritisator'
 COMMON = 'Common'
+METHOD = 'Method'
 
 # SUBTITLE -----------------------------------------
 PATH_FILE_FEED = 'pathToFileFeed'
@@ -91,7 +93,7 @@ def create_bloom_filters(logger, list_point_feed, list_point_test, discritisator
 
         while  (diffFalsePositive > LIMIT_FALSE_POSITIVE) and  (nb_loop < LIMIT_LOOP):
             bloom_filter = BloomFilterTester(len(list_point_feed), current_m, list_point_feed, discritisator)
-            nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test, discritisator)
+            nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test)
             ratio_size = current_m/len(list_point_feed)
 
             # Add result to the list.
@@ -165,8 +167,8 @@ def get_parameters (logger, config):
         # select discritisator
         if RECTANGLE_DISCRITISATOR in config.sections():
             delta_error = float(config[COMMON][DELTA_ERROR])
-            discritisator = RectangleDiscretisator(delta_error)
-
+            method = config[COMMON][METHOD]
+            discritisator = RectangleDiscretisator(delta_error, method)
         elif CIRCLE_DISCRITISATOR in config.sections():
             #TODO
             pass
