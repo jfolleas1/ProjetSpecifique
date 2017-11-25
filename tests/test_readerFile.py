@@ -3,13 +3,13 @@ from src.providerData.ReaderFromFile import ReaderFromFile
 from src.structureData.Point import Point
 
 REPOSITORY_PATH = "./tests/data/"
-FILE_NAME = "test.txt"
+FILE_NAME = "tests.txt"
 FILE_NAME_FAIL = "test_fail.txt"
 DIMENSION = 2
 LENGHT_POINTS = 3
 
 class PointTest(unittest.TestCase):
-    """Test case used for test my ReadearFile class."""
+    """Test case used for tests my ReadearFile class."""
 
     def setUp(self):
         """Initialize tests."""

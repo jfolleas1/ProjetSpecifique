@@ -5,7 +5,7 @@ from src.discretisator.RectangleDiscretisator import RectangleDiscretisator
 
 
 class DiscretisatorTest(unittest.TestCase):
-    """Test case used for test my discretisator class."""
+    """Test case used for tests my discretisator class."""
 
     def setUp(self):
         """Initialize tests."""

@@ -3,3 +3,7 @@
 # gitignore on  .idea #
 .idea/
 *.pyc
+
+# personal config
+./config.sh
+config.sh
