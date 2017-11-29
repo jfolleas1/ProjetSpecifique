@@ -23,7 +23,7 @@ class Discretisator:
     @abstractmethod
     def __init__(self, lambda_error=0.01, method_type=Method.DIS_TESTS):
         self.lambda_error = lambda_error
-        self.method = method_type
+        self.method_type = method_type
 
     def discretise_point(self, point):
         """
