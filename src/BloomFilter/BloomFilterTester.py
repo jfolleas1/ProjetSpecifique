@@ -29,7 +29,7 @@ class BloomFilterTester:
         if is_real_size:
             n = n * 2 ** dimension
             m = m * 2 ** dimension
-            #print('hahaah')
+
         error_rate = float(math.exp((math.log(2) ** 2)*float(m)/float(-1*n)))
         self.bloom_filter = BloomFilter(n,error_rate)
         # TODO version with the choose of the Hash : the third parameter is the hash

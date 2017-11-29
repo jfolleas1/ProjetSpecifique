@@ -8,6 +8,7 @@ from src.providerData.ReaderFromGenerator import RandomDataGenerator
 from src.discretisator.RectangleDiscretisator import RectangleDiscretisator
 from src.BloomFilter.BloomFilterTester import BloomFilterTester
 from src.util.DataVisualisation import visualize_curve
+from src.discretisator.CircleDiscretisor2D import CircleDiscretisator2D
 import os
 from src.discretisator.Arf import Arf
 # -----------------------------------------------------------------------------------------
@@ -26,10 +27,8 @@ ARF = 'Arf'
 COMMON = 'Common'
 
 # SUBTITLE -----------------------------------------
-PATH_FILE_FEED = 'pathToFileFeed'
 DIMENSION = 'dimension'
 DELTA_ERROR = 'DeltaError'
-PATH_FILE_TEST = 'pathToFileTest'
 M = 'm'
 SIZE_DATA = 'size_data'
 DOMAIN = 'domain'
@@ -53,9 +52,10 @@ def main():
     # Get parameters from config file
     list_visualisation = []
     for config_file in os.listdir(PATH_CONFIG):
+        print(config_file)
         list_visualisation.append(run_test_on_bloom_filter(logger, PATH_CONFIG, config_file))
 
-    visualize_curve(list_visualisation, "ratio m/n", " rate false positive (%)", "Dimension 1")
+    visualize_curve(list_visualisation, "ratio m/n", " rate false positive (%)", "Comparaison discretization method in Dimension 2")
 
 
 def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Dimension 1 using delta : " ):
@@ -91,7 +91,7 @@ def run_test_on_bloom_filter(logger, Path_config, file_name, title = "Dimension 
         list_ratio, false_positive_rate = create_bloom_filters(logger, list_point_feed, list_point_test,
                                                                discritisator, m)
 
-        domain = float(config[GENERATE_POINT][DOMAIN])
+        domain = float(config[COMMON][DOMAIN])
 
     return (title + str(float(config[COMMON][DELTA_ERROR])*100/domain) + " %",
             list_ratio, false_positive_rate)
@@ -110,8 +110,8 @@ def create_bloom_filters(logger, list_point_feed, list_point_test, discritisator
         current_m = m
 
         while  (diffFalsePositive > LIMIT_FALSE_POSITIVE) and  (nb_loop < LIMIT_LOOP):
-            bloom_filter = BloomFilterTester(len(list_point_feed), current_m, list_point_feed, discritisator)
-            nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test, discritisator)
+            bloom_filter = BloomFilterTester(len(list_point_feed), current_m, None, False, list_point_feed, discritisator)
+            nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test)
             ratio_size = current_m/len(list_point_feed)
 
             # Add result to the list.
@@ -146,17 +146,17 @@ def get_parameters (logger, config):
         # Select readers
         if READER_FROM_FILE in config.sections():
             reader_feed = ReaderFromFile(int(config[READER_FROM_FILE][DIMENSION]),
-                                    config[READER_FROM_FILE][PATH_FILE_FEED])
+                                    config[READER_FROM_FILE][FILE_NAME_FEED])
             list_point_feed = reader_feed.get_points()
 
             reader_test = ReaderFromFile(int(config[READER_FROM_FILE][DIMENSION]),
-                                    config[READER_FROM_FILE][PATH_FILE_TEST])
+                                    config[READER_FROM_FILE][FILE_NAME_TEST])
             list_point_test = reader_test.get_points()
 
         elif GENERATE_POINT in config.sections():
 
             size_of_data_set = int(config[GENERATE_POINT][SIZE_DATA])
-            domain = int(config[GENERATE_POINT][DOMAIN])
+            domain = int(config[COMMON][DOMAIN])
             test_write_file = config[GENERATE_POINT][TEST_WRITE]
 
             data_from_generator_feed = RandomDataGenerator(int(config[GENERATE_POINT][DIMENSION]),
@@ -187,10 +187,10 @@ def get_parameters (logger, config):
             delta_error = float(config[COMMON][DELTA_ERROR])
             discritisator = RectangleDiscretisator(delta_error)
 
-
-        elif CIRCLE_DISCRITISATOR in config.sections():
-            #TODO
-            pass
+        # select discritisator
+        if CIRCLE_DISCRITISATOR in config.sections():
+            delta_error = float(config[COMMON][DELTA_ERROR])
+            discritisator = CircleDiscretisator2D(delta_error)
 
 
         if COMMON in config.sections():
