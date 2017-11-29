@@ -48,6 +48,10 @@ class RandomDataGenerator(DataProvider):
         for vct in array_vector:
             self.point_list.append(Point(list(vct)))
         if save_file_name:
+            try:
+                os.remove(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name))
+            except OSError:
+                pass
             vector_data_frame_ = pd.DataFrame(array_vector)
             vector_data_frame_.to_csv(os.path.join(os.getcwd(),DATA_FOLDER,save_file_name), encoding='utf-8')
 
@@ -79,6 +83,10 @@ class RandomDataGenerator(DataProvider):
                 logger.error("infinit loop to construct similar")
                 assert(False)
         if save_file_name:
+            try:
+                os.remove(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name))
+            except OSError:
+                pass
             pd.DataFrame(array_vector).to_csv(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name), encoding='utf-8')
 
 
@@ -118,15 +126,19 @@ class RandomDataGenerator(DataProvider):
                 number_of_vector += 1
             number_of_test += 1
             if number_of_test >= 1000*len(data_set):
-                logger.error("infinit loop to construct different")
+                logger.error("infinite loop to construct different")
                 assert(False)
+
         if save_file_name:
+            try:
+                os.remove(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name))
+            except OSError:
+                pass
             pd.DataFrame(array_vector).to_csv(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name), encoding='utf-8')
 
 
     # overrides(DataProvider)
     def get_points(self):
-
         """
         Provide the data in the forme of a list of Point objects
         """

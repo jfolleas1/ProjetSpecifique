@@ -22,7 +22,7 @@ DIMENSION = 2
 SIZE_DATA = 250
 DOMAIN = 5000
 RATE_M_N = 100
-TESTS = 100
+TESTS = 250
 REAL_SIZE = True
 
 
@@ -64,6 +64,7 @@ def create_bloom_filters(logger):
     k = 0;
     name_feed = "generate_point_feed.csv"
     name_test = "generate_point_test.csv"
+    arf = Arf('./arf')
 
     for delta in range(1, 50, 2):
 
@@ -88,9 +89,8 @@ def create_bloom_filters(logger):
         false_positive_rate[3].append(bloom_filter_C.test_set_points(list_point_test) / SIZE_DATA)
 
         # ---------------------------------------------------------------------------      ARF part.
-        arf = Arf('./arf')
-        argv =  [str(math.log(DOMAIN/delta,2)), str(delta), str(DIMENSION), str(SIZE_DATA), str(SIZE_DATA * RATE_M_N),
-                    name_feed, name_test]
+        argv =  [str(math.log(DOMAIN/delta, 2)), str(delta), str(DIMENSION), str(SIZE_DATA), str(SIZE_DATA * RATE_M_N),
+                    "../data/"+name_feed, "../data/"+name_test]
         size_filter_real, false_positive = arf.execute_program(argv);
         false_positive_rate[4].append(int(false_positive) / SIZE_DATA)
         # -------------------------------------------------------------------------
@@ -99,7 +99,5 @@ def create_bloom_filters(logger):
         list_delta.append(delta)
 
     return [list_delta, false_positive_rate]
-
-
 
 main()
