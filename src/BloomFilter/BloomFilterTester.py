@@ -19,12 +19,16 @@ class BloomFilterTester:
     This class allow to create a Bloom filter with a fixed size and test his false positive rate.
     """
 
-    def __init__(self, n, m, point_build=[], discretisator=None):
+    def __init__(self, n, m, dimension, is_real_size=False, point_build=[], discretisator=None):
         """
         :param n: number of element that will be stored.
         :param m: size of the bloom filter in bit.
         :param point_build: list of object points to insert in the bloom filter
         """
+        self.dimension = dimension
+        if is_real_size:
+            n = n * 2 ** dimension
+            m = m * 2 ** dimension
         error_rate = float(math.exp((math.log(2) ** 2)*float(m)/float(-1*n)))
         self.bloom_filter = BloomFilter(n,error_rate)
         # TODO version with the choose of the Hash : the third parameter is the hash
