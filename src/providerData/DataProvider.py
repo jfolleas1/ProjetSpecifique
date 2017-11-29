@@ -32,5 +32,4 @@ class DataProvider:
         """
         Provide the data in the forme of a list of Point objects
         """
-        logger.error("call super method")
-        return
+        raise NotImplementedError
