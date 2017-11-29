@@ -3,6 +3,8 @@
 import os
 import pandas as pd
 import numpy as np
+from random import randint, uniform
+
 from src.providerData.DataProvider import DataProvider
 from src.structureData.Point import Point
 from src.util.Logger import Logger
@@ -48,6 +50,37 @@ class RandomDataGenerator(DataProvider):
         if save_file_name:
             vector_data_frame_ = pd.DataFrame(array_vector)
             vector_data_frame_.to_csv(os.path.join(os.getcwd(),DATA_FOLDER,save_file_name), encoding='utf-8')
+
+    def genarate_similar(self, delta, data_set, save_file_name=None):
+        """
+        This method genrate the data and store it into the object attribute point_list. Each point generated in
+            list_point is at least at <delta> from any point in <data_set>.
+        :param delta: (float) the minimum distance between the point <point> to the <data_set>
+        :param data_set: The data set in form of list of object Point
+        :param save_file_name: name of the file in which we will store the generate data for next tests.
+            if this parameter if not registered the data will be not save.
+        :return: Nothing
+        """
+        number_of_vector = 0
+        number_of_test = 0
+        array_vector = []
+        while number_of_vector < self.size_of_data_set:
+            index = randint(0, len(data_set)-1)
+            vct = list(data_set[index].coordinates)
+            for i in range(len(vct)):
+                vct[i]+= uniform(0,1)*delta
+            point = Point(vct)
+            if point.distance(data_set[index]) < delta:
+                self.point_list.append(point)
+                array_vector.append(vct)
+                number_of_vector += 1
+            number_of_test += 1
+            if number_of_test >= 1000*len(data_set):
+                logger.error("infinit loop to construct similar")
+                assert(False)
+        if save_file_name:
+            pd.DataFrame(array_vector).to_csv(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name), encoding='utf-8')
+
 
     @staticmethod
     def distant_enough(point, delta, data_set):

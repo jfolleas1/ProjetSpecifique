@@ -11,6 +11,8 @@ import math
 # -----------------------------------------------------------------------------------------
 # Constant
 
+CONST_APPROXIMATION = 1000000
+
 # -----------------------------------------------------------------------------------------
 # Code
 
@@ -37,7 +39,7 @@ class Point:
     def to_string(self):
         res = ""
         for i in self.coordinates:
-            res += ":"+str(i)
+            res += ":"+str(math.floor(i*CONST_APPROXIMATION)/CONST_APPROXIMATION)
         return res[1:]
 
     def distance(self, other_point):
