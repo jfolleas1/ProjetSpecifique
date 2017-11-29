@@ -38,4 +38,17 @@ class Discretisator:
             results += self.discretise_point(point)
         return results
 
+    def discretise_point_to_insert (self, points):
+        """
+        Return a list of points dicretize to insert in the Bloom filter.
+        """
+        raise NotImplementedError
+
+
+    def discretise_point_to_test(self, points):
+        """
+        Return a list of points dicretize to test in the Bloom filter.
+        """
+        raise NotImplementedError
+
 
