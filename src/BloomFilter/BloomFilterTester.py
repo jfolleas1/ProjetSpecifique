@@ -36,8 +36,9 @@ class BloomFilterTester:
         self.point_build = point_build
         self.discretisator = discretisator
         if self.discretisator:
-            for d_pt in discretisator.discretise_point_to_insert(point_build):
-                self.bloom_filter.add(d_pt.to_string())
+            for point in point_build:
+                for d_pt in self.discretisator.discretise_point_to_insert(point):
+                    self.bloom_filter.add(d_pt.to_string())
         else:
             for pt in point_build:
                 self.bloom_filter.add(pt.to_string())
@@ -57,8 +58,9 @@ class BloomFilterTester:
         :return: Nothing
         """
         if self.discretisator:
-            for d_pt in self.discretisator.discretise_point_to_insert(points):
-                self.bloom_filter.add(d_pt.to_string())
+            for point in points:
+                for d_pt in self.discretisator.discretise_point_to_insert(point):
+                    self.bloom_filter.add(d_pt.to_string())
         else:
             for pt in points:
                 self.bloom_filter.add(pt.to_string())
@@ -80,9 +82,11 @@ class BloomFilterTester:
         """
         number_of_positif = 0
         if self.discretisator:
-            for pt in self.discretisator.discretise_point_to_test(points):
-                if self.test_one_point(pt):
-                    number_of_positif += 1
+            for point in points:
+                for pt in self.discretisator.discretise_point_to_test(point):
+                    if self.test_one_point(pt):
+                        number_of_positif += 1
+                        break
         else:
             for pt in points:
                 if self.test_one_point(pt):

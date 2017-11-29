@@ -8,15 +8,16 @@ from src.providerData.ReaderFromGenerator import RandomDataGenerator
 from src.discretisator.RectangleDiscretisator import RectangleDiscretisator
 from src.BloomFilter.BloomFilterTester import BloomFilterTester
 from src.util.DataVisualisation import visualize_curve
+import src.util.Constants as Constants
 import os
 # -----------------------------------------------------------------------------------------
 # Constant
 
 
 
-DIMENSION = 3
+DIMENSION = 1
 SIZE_DATA = 500
-DOMAIN = 10000
+DOMAIN = 100000
 RATE_M_N = 100
 TESTS = 300
 
@@ -36,9 +37,9 @@ def main():
     # ---------------------------------------------------------------
     # Get parameters from config file
     list_visualisation = []
-    list_visualisation.append(create_bloom_filters(logger, "dis_double"))
-    list_visualisation.append(create_bloom_filters(logger, "dis_to_insert"))
-    list_visualisation.append(create_bloom_filters(logger, "dis_to_check"))
+    list_visualisation.append(create_bloom_filters(logger, Constants.DIS_DOUBLE))
+    list_visualisation.append(create_bloom_filters(logger, Constants.DIS_INPUTS))
+    list_visualisation.append(create_bloom_filters(logger, Constants.DIS_TESTS))
     list_visualisation.append(create_bloom_filters(logger))
     visualize_curve(list_visualisation, "delta", " rate false positive (%)", "Dimension: "+str(DIMENSION) + "   size_set: "+str(SIZE_DATA)+"   rate size_bloom/size_set: "+str(RATE_M_N)+"    domain: "+str(DOMAIN)+ "   number_of tests: "+ str(TESTS))
 
@@ -54,7 +55,7 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
     list_delta = []
     false_positive_rate = []
     k = 0;
-    for delta in range(1, 20, 2):
+    for delta in range(1, 60, 2):
 
         data_from_generator_feed = RandomDataGenerator(DIMENSION, SIZE_DATA, DOMAIN)
         data_from_generator_test = RandomDataGenerator(DIMENSION, SIZE_DATA, DOMAIN)
@@ -67,7 +68,7 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
         discretizator = None
         if method:
             discretizator = RectangleDiscretisator(delta, method)
-        bloom_filter = BloomFilterTester(SIZE_DATA, SIZE_DATA*RATE_M_N, DIMENSION, False, list_point_feed, discretizator)
+        bloom_filter = BloomFilterTester(SIZE_DATA, SIZE_DATA*RATE_M_N, DIMENSION, True, list_point_feed, discretizator)
         nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test)
         # Add result to the list.
         list_delta.append(delta)

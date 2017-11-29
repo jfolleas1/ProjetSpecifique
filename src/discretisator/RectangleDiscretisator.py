@@ -83,24 +83,19 @@ class RectangleDiscretisator(Discretisator):
                 min_dist = point.distance(pt)
         return min_pt
 
-    def discretise_point_to_insert(self, points):
+    def discretise_point_to_insert(self, point):
         points_to_insert = []
         if self.method_type == Constants.DIS_TESTS:
-            for pt in points:
-                points_to_insert.append(self.discretise_point_to_one(pt))
+            points_to_insert.append(self.discretise_point_to_one(point))
         else:
-            for pt in points:
-                for d_pt in self.discretise_point(pt):
-                    points_to_insert.append(d_pt)
+            for d_pt in self.discretise_point(point):
+                points_to_insert.append(d_pt)
         return points_to_insert
 
-    def discretise_point_to_test(self, points):
-        points_to_insert = []
+    def discretise_point_to_test(self, point):
+        points_to_test = []
         if self.method_type == Constants.DIS_INPUTS:
-            for pt in points:
-                points_to_insert.append(self.discretise_point_to_one(pt))
+            points_to_test = [self.discretise_point_to_one(point)]
         else:
-            for pt in points:
-                for d_pt in self.discretise_point(pt):
-                    points_to_insert.append(d_pt)
-        return points_to_insert
+            points_to_test = self.discretise_point(point)
+        return points_to_test
