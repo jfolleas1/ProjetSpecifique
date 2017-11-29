@@ -15,9 +15,11 @@ import os
 
 
 
-DELTA = 0.0001
-SIZE_DATA = 200
-DOMAIN = 1000000
+DELTA = 10
+SIZE_DATA = 500
+DOMAIN = 500
+RATE_M_N = 100
+TESTS = 150
 
 
 
@@ -29,41 +31,50 @@ def main():
     logger = Logger('Main')
     logger.info('begin operation on bloom filter')
 
+
+
+
     # ---------------------------------------------------------------
     # Get parameters from config file
     list_visualisation = []
     list_visualisation.append(create_bloom_filters(logger, "dis_double"))
     list_visualisation.append(create_bloom_filters(logger, "dis_to_insert"))
     list_visualisation.append(create_bloom_filters(logger, "dis_to_check"))
-    visualize_curve(list_visualisation, "delta", " rate false positive (%)", " Graph allowing comparaison between different Bloom filter")
+    list_visualisation.append(create_bloom_filters(logger))
+    visualize_curve(list_visualisation, "dimension", " rate false positive (%)", "DELTA "+str(DELTA) + " N "+str(SIZE_DATA)+" M/N "+str(RATE_M_N)+" DOMAIN "+str(DOMAIN)+ " Tests "+ str(TESTS))
 
 
 
 
-def create_bloom_filters(logger, method, title = "Methode : "):
+def create_bloom_filters(logger, method = None, title = "Methode : "):
     """
     Implement and create Bloom filter with different size until we reach a false positive rate minimum.
     :return: None
     """
 
-    list_delta = []
+    list_dim = []
     false_positive_rate = []
-    for delta in range(1, 100):
-        data_from_generator_feed = RandomDataGenerator(DIMENSION, SIZE_DATA, DOMAIN)
+    k = 0;
+    for dim in range(3, 8):
+
+        data_from_generator_feed = RandomDataGenerator(dim, SIZE_DATA, DOMAIN)
+        data_from_generator_test = RandomDataGenerator(dim, SIZE_DATA, DOMAIN)
         data_from_generator_feed.genarate()
-        data_from_generator_test = RandomDataGenerator(DIMENSION, 100, DOMAIN)
-        data_from_generator_test.genarate_falses(delta, data_from_generator_feed.get_points())
+
+        # data_from_generator_test.genarate_falses_domain(delta, data_from_generator_feed.get_points())
         list_point_feed = data_from_generator_feed.get_points()
         list_point_test = data_from_generator_test.get_points()
-        discretizator = RectangleDiscretisator(delta, method)
-        bloom_filter = BloomFilterTester(len(list_point_feed), SIZE_DATA*100, list_point_feed, discretizator)
+        data_from_generator_test.genarate_falses(DELTA, data_from_generator_feed.get_points())
+        discretizator = None
+        if method:
+            discretizator = RectangleDiscretisator(DELTA, method)
+        bloom_filter = BloomFilterTester(len(list_point_feed)*2**dim, SIZE_DATA*RATE_M_N*2**dim, list_point_feed, discretizator)
         nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test)
         # Add result to the list.
-        list_delta.append(delta)
+        list_dim.append(dim)
         false_positive_rate.append(nb_point_in_bloom_filter/ len(list_point_test))
-        diffFalsePositive = nb_point_in_bloom_filter
 
-    return (title + method), list_delta, false_positive_rate
+    return (title + str(method)), list_dim, false_positive_rate
 
 
 

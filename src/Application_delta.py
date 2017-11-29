@@ -16,8 +16,8 @@ import os
 
 
 DIMENSION = 2
-SIZE_DATA = 30
-DOMAIN = 100
+SIZE_DATA = 500
+DOMAIN = 10000
 RATE_M_N = 100
 TESTS = 300
 
@@ -30,6 +30,9 @@ def main():
     """
     logger = Logger('Main')
     logger.info('begin operation on bloom filter')
+
+
+
 
     # ---------------------------------------------------------------
     # Get parameters from config file
@@ -51,14 +54,17 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
 
     list_delta = []
     false_positive_rate = []
-    for delta in range(1, 20, 2):
+    k = 0;
+    for delta in range(1, 40, 2):
+
         data_from_generator_feed = RandomDataGenerator(DIMENSION, SIZE_DATA, DOMAIN)
+        data_from_generator_test = RandomDataGenerator(DIMENSION, SIZE_DATA, DOMAIN)
         data_from_generator_feed.genarate()
-        data_from_generator_test = RandomDataGenerator(DIMENSION, TESTS, DOMAIN)
-        #data_from_generator_test.genarate_falses(delta, data_from_generator_feed.get_points())
-        data_from_generator_test.genarate_falses_domain(delta, data_from_generator_feed.get_points())
+
+
         list_point_feed = data_from_generator_feed.get_points()
         list_point_test = data_from_generator_test.get_points()
+        data_from_generator_test.genarate_falses(delta, data_from_generator_feed.get_points())
         discretizator = None
         if method:
             discretizator = RectangleDiscretisator(delta, method)
@@ -67,7 +73,6 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
         # Add result to the list.
         list_delta.append(delta)
         false_positive_rate.append(nb_point_in_bloom_filter/ len(list_point_test))
-        diffFalsePositive = nb_point_in_bloom_filter
 
     return (title + str(method)), list_delta, false_positive_rate
 
