@@ -15,11 +15,12 @@ import os
 
 
 
-DIMENSION = 1
-SIZE_DATA = 500
-DOMAIN = 100000
+DIMENSION = 3
+SIZE_DATA = 250
+DOMAIN = 5000
 RATE_M_N = 100
-TESTS = 300
+TESTS = 200
+REAL_SIZE = False
 
 
 
@@ -36,29 +37,30 @@ def main():
 
     # ---------------------------------------------------------------
     # Get parameters from config file
-    list_visualisation = []
-    list_visualisation.append(create_bloom_filters(logger, Constants.DIS_DOUBLE))
-    list_visualisation.append(create_bloom_filters(logger, Constants.DIS_INPUTS))
-    list_visualisation.append(create_bloom_filters(logger, Constants.DIS_TESTS))
-    list_visualisation.append(create_bloom_filters(logger))
-    visualize_curve(list_visualisation, "delta", " rate false positive (%)", "Dimension: "+str(DIMENSION) + "   size_set: "+str(SIZE_DATA)+"   rate size_bloom/size_set: "+str(RATE_M_N)+"    domain: "+str(DOMAIN)+ "   number_of tests: "+ str(TESTS))
+    list_visualisation = [];
+    a = create_bloom_filters(logger)
+    list_visualisation.append(("dis_input", a[0], a[1][0]))
+    list_visualisation.append(("dis_test", a[0], a[1][1]))
+    list_visualisation.append(("dis_double", a[0], a[1][2]))
+    #list_visualisation.append(("dis_none", a[0], a[1][3]))
+    visualize_curve(list_visualisation, "delta", " rate false positive (%)", "Dimension: "+str(DIMENSION) + "   size_set n: "+str(SIZE_DATA)+"   rate size_bloom/size_set n/m: "+str(RATE_M_N)+"    domain: "+str(DOMAIN)+ "   number_of tests: "+ str(TESTS))
 
 
 
 
-def create_bloom_filters(logger, method = None, title = "Methode : "):
+def create_bloom_filters(logger):
     """
     Implement and create Bloom filter with different size until we reach a false positive rate minimum.
     :return: None
     """
 
     list_delta = []
-    false_positive_rate = []
+    false_positive_rate = [[], [], [], []]
     k = 0;
-    for delta in range(1, 60, 2):
+    for delta in range(1, 100, 2):
 
         data_from_generator_feed = RandomDataGenerator(DIMENSION, SIZE_DATA, DOMAIN)
-        data_from_generator_test = RandomDataGenerator(DIMENSION, SIZE_DATA, DOMAIN)
+        data_from_generator_test = RandomDataGenerator(DIMENSION, TESTS, DOMAIN)
         data_from_generator_feed.genarate()
 
 
@@ -66,15 +68,20 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
         list_point_test = data_from_generator_test.get_points()
         data_from_generator_test.genarate_falses(delta, data_from_generator_feed.get_points())
         discretizator = None
-        if method:
-            discretizator = RectangleDiscretisator(delta, method)
-        bloom_filter = BloomFilterTester(SIZE_DATA, SIZE_DATA*RATE_M_N, DIMENSION, True, list_point_feed, discretizator)
-        nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test)
+
+
+        bloom_filter_RI = BloomFilterTester(SIZE_DATA, SIZE_DATA*RATE_M_N, DIMENSION, REAL_SIZE, list_point_feed, RectangleDiscretisator(delta, Constants.DIS_INPUTS))
+        bloom_filter_RT = BloomFilterTester(SIZE_DATA, SIZE_DATA * RATE_M_N, DIMENSION, REAL_SIZE, list_point_feed, RectangleDiscretisator(delta, Constants.DIS_TESTS))
+        bloom_filter_D = BloomFilterTester(SIZE_DATA, SIZE_DATA * RATE_M_N, DIMENSION, REAL_SIZE, list_point_feed, RectangleDiscretisator(delta, Constants.DIS_DOUBLE))
+        bloom_filter = BloomFilterTester(SIZE_DATA, SIZE_DATA * RATE_M_N, DIMENSION, REAL_SIZE, list_point_feed)
+        false_positive_rate[0].append(bloom_filter_RI.test_set_points(list_point_test)/TESTS)
+        false_positive_rate[1].append(bloom_filter_RT.test_set_points(list_point_test) / TESTS)
+        false_positive_rate[2].append(bloom_filter_D.test_set_points(list_point_test) / TESTS)
+        false_positive_rate[3].append(bloom_filter.test_set_points(list_point_test) / TESTS)
         # Add result to the list.
         list_delta.append(delta)
-        false_positive_rate.append(nb_point_in_bloom_filter/len(list_point_test))
 
-    return (title + str(method)), list_delta, false_positive_rate
+    return [list_delta, false_positive_rate]
 
 
 
