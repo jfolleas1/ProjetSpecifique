@@ -6,6 +6,7 @@
 
 from abc import ABCMeta, abstractmethod
 from decimal import Decimal
+import src.util.Constants as Method
 
 # --------- Constant
 
@@ -20,8 +21,9 @@ class Discretisator:
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def __init__(self, lambda_error=0.01):
+    def __init__(self, lambda_error=0.01, method_type=Method.DIS_TESTS):
         self.lambda_error = lambda_error
+        self.method = method_type
 
     def discretise_point(self, point):
         """
