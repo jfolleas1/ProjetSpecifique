@@ -29,10 +29,10 @@ class BloomFilterTester:
         self.bloom_filter = BloomFilter(n,error_rate)
         # TODO version with the choose of the Hash : the third parameter is the hash
         self.point_build = point_build
-        if discretisator:
-            for pt in point_build:
-                for d_pt in discretisator.discretise_point(pt):
-                    self.bloom_filter.add(d_pt.to_string())
+        self.discretisator = discretisator
+        if self.discretisator:
+            for d_pt in discretisator.discretise_point_to_insert(point_build):
+                self.bloom_filter.add(d_pt.to_string())
         else:
             for pt in point_build:
                 self.bloom_filter.add(pt.to_string())
@@ -44,17 +44,16 @@ class BloomFilterTester:
         """
         return self.bloom_filter.num_bits_m
 
-    def feed(self, points, discretisator=None):
+    def feed(self, points):
         """
         Add all the points (discretizate if :discretisator: is not None) in the Bloom Filter
         :param points: the points that we want to index
         :param discretisator: the Discretizator that we will use to index data
         :return: Nothing
         """
-        if discretisator:
-            for pt in points:
-                for d_pt in discretisator.discretise_point(pt):
-                    self.bloom_filter.add(d_pt.to_string())
+        if self.discretisator:
+            for d_pt in self.discretisator.discretise_point_to_insert(points):
+                self.bloom_filter.add(d_pt.to_string())
         else:
             for pt in points:
                 self.bloom_filter.add(pt.to_string())
@@ -68,15 +67,19 @@ class BloomFilterTester:
         """
         return pt.to_string() in self.bloom_filter
 
-    def test_set_points(self, points, discretizor):
+    def test_set_points(self, points):
         """
         Ask the number of element wich are in the indexed set and in the :points: set
         :param points: The set that we want to check
         :return: The size of the intersection
         """
-        if discretizor:
-            number_of_positif = 0
-            for pt in points:
-                if self.test_one_point(discretizor.discretise_point_to_one(pt)):
+        number_of_positif = 0
+        if self.discretisator:
+            for pt in self.self.discretisator.discretise_point_to_test(points):
+                if self.test_one_point(pt):
                     number_of_positif += 1
-            return number_of_positif
+        else:
+            for pt in points:
+                if self.test_one_point(pt):
+                    number_of_positif += 1
+        return number_of_positif
