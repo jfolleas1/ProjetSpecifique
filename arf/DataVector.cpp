@@ -302,7 +302,7 @@ void DataVector::save(const string & myfilename)
 
 */
 void DataVector::load (const string & myfilename){
-	ifstream file ( myfilename, std::ifstream::in);
+	ifstream file ( myfilename.c_str(), std::ifstream::in);
 	string str;
 	vector< std::vector<int> > element;
 	int line = 0;
@@ -314,7 +314,7 @@ void DataVector::load (const string & myfilename){
 			 // insert values in vector.
 			 vector<int> vectorValue;
 		     for(int i = 1; i < values.size() ; i ++){
-		    	 vectorValue.push_back(stoi(values[i]));
+		    	 vectorValue.push_back(atoi(values[i].c_str()));
 		     }
 		     this->realElements.push_back(vectorValue);
 	     }

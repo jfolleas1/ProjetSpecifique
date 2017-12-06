@@ -33,7 +33,7 @@ class Arf():
         """
         executable = os.path.join(self.path, MAKE_FILE)
         self.logger.info('Compile C++ code to : '+str(executable))
-
+        print(executable)
         if os.path.isfile(executable):
             try:
                 old_path = os.getcwd()
