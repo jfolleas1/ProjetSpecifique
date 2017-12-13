@@ -20,17 +20,34 @@ class ArfMAin:
     :param domain: int that represent the domain of the vector space.
     :param size: int that is the size of the ARF in bits.
     """
-    def __init__(self, path_file_feed, path_file_test, dim=1, domain=1000, min_range_size=4, size=1000):
+    def __init__(self, path_file_feed, path_file_test, dim=1, domain=1000, size=1000, delta_error=1,
+                 methode_discretize = Constant.DIS_TESTS):
+        self.discretizor = RectangleDiscretisator(delta_error, methode_discretize)
         # get data for feed
         self.data_vector_feed = DataVector(dim, path_file_feed)
         # get data for test
         self.data_vector_test = DataVector(dim, path_file_test)
+        if methode_discretize == Constant.DIS_DOUBLE:
+            min_range_size = delta_error
+        else:
+            min_range_size = 2*delta_error
         self.arf = ARF(dim, domain, min_range_size, size)
 
 
-    def feed(self, discretize_param = Constant.DIS_TESTS, discretizator = None):
+    def feed(self):
+        """
 
-        pass
+        :return:
+        """
+        points = self.data_vector_feed.get_points()
+        d_points = self.discretizor.discretise_points_to_insert(points)
+        self.arf.insert_set_of_points(d_points)
 
-    def test(self, discretize_param = Constant.DIS_TESTS, discretizator = None):
-        pass
+    def test(self):
+        """
+
+        :return:
+        """
+        points = self.data_vector_feed.get_points()
+        d_points = self.discretizor.discretise_points_to_test(points)
+        return self.arf.test_set_of_points(d_points)

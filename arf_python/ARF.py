@@ -9,7 +9,7 @@ import time
 from arf_python.Leaf import Leaf
 from arf_python.Node import Node
 from arf_python.Point import Point
-
+from arf_python.util.ReaderFromGenerator import RandomDataGenerator
 # --------- Constants
 
 
@@ -31,7 +31,7 @@ class ARF:
         self.dim = dim
         self.min_range_size = min_range_size
         self.domain = get_real_domain(domain, min_range_size)
-        self.size = size
+        self.expected_size_in_bits = size
         # Set the Node class attributs
         Node.dim = dim
         Node.min_range_size = min_range_size
@@ -39,7 +39,7 @@ class ARF:
         self.list_of_leaves_and_depth = {} # List of tuple (leaf, depth); will help for erase the tree
         for ind in range(2**self.dim):
             self.list_of_leaves_and_depth[self.root.get_child_node(ind).__repr__()] = (self.root.get_child_node(ind), 1)
-        self.real_size = 5
+        self.real_size_nodes = 5
 
     def __get_max_depth(self):
         max_depth = 0
@@ -48,6 +48,10 @@ class ARF:
             doamin_cpy/=2
             max_depth+=1
         return max_depth
+
+    def get_bit_size(self):
+        return (2**self.dim)*(self.real_size_nodes - len(self.list_of_leaves_and_depth.values())) + \
+               len(self.list_of_leaves_and_depth.values())
 
     def __get_num_of_son_and_new_middle(self, point, middle, domain_of_current_node):
         assert type(point) == Point, ":param middle: must be a Point"
@@ -141,7 +145,7 @@ class ARF:
             depth_of_next_leaf = self.list_of_leaves_and_depth[current_leaf.__repr__()][1]+1 # update liste of leaves
             del self.list_of_leaves_and_depth[current_leaf.__repr__()] # update liste of leaves
             father_of_leaf.split(num_of_son)
-            self.real_size += 2**self.dim
+            self.real_size_nodes += 2 ** self.dim
             father_of_leaf = father_of_leaf.get_child_node(num_of_son)
             for ind in range(2**self.dim): # update liste of leaves
                 self.list_of_leaves_and_depth[father_of_leaf.get_child_node(ind).__repr__()] = \
@@ -175,8 +179,6 @@ class ARF:
         leaf = node.merge()
         self.list_of_leaves_and_depth[leaf.__repr__()] = (leaf, depth)
 
-
-
     def __erase_unusfull_leaves(self):
         """
         TODO
@@ -188,9 +190,10 @@ class ARF:
             for leaf, _ in self.list_of_leaves_and_depth.values():
                 if leaf.father.only_got_leaves_child():
                     if leaf.father.leaves_got_same_value():
-                        self.__merge_one_node(leaf.father)
-                        no_changes = False
-                        break
+                        if leaf.father != self.root:
+                            self.__merge_one_node(leaf.father)
+                            no_changes = False
+                            break
 
 
     def __erase_deepest_leaves(self):
@@ -198,7 +201,7 @@ class ARF:
         TODO
         :return: Nothing
         """
-        while self.real_size > self.size:
+        while self.get_bit_size() > self.expected_size_in_bits:
             #take all the deepest leaves
             deepest_level = max(list(map(lambda x: x[1], self.list_of_leaves_and_depth.values())))
             deepest_leaves = list(map(lambda x: x[0], filter(lambda x: x[1] == deepest_level,
@@ -208,10 +211,9 @@ class ARF:
                 if leaf.father not in list_of_father_to_merge and leaf.father.only_got_leaves_child():
                     list_of_father_to_merge.append(leaf.father)
             for father in list_of_father_to_merge:
-                print(list_of_father_to_merge)
-                if self.real_size > self.size:
+                if self.get_bit_size() > self.expected_size_in_bits:
                     self.__merge_one_node(father)
-                    self.real_size -= 2 ** self.dim
+                    self.real_size_nodes -= 2 ** self.dim
                 else:
                     break
 
@@ -271,27 +273,6 @@ class ARF:
 
 
 
-    #TODO pour un point donné calcul les 2**dim points à insérer comme dans bloom filter
 
 
 
-my_ARF = ARF(dim=2, domain=16, min_range_size=4, size=10)
-# print(my_ARF.root.__repr__())
-# print(my_ARF.root.get_child_node(0).__repr__())
-# print(my_ARF.root.get_child_node(1).__repr__())
-# print(my_ARF.root.get_child_node(2).__repr__())
-# print(my_ARF.root.get_child_node(3).__repr__())
-my_ARF.insert_one_point(Point([5, 5]))
-my_ARF.insert_one_point(Point([3, 5]))
-my_ARF.insert_one_point(Point([3, 3]))
-
-my_ARF.insert_one_point(Point([13, 13]))
-my_ARF.insert_one_point(Point([11, 13]))
-my_ARF.insert_one_point(Point([11, 11]))
-
-#my_ARF.print()
-my_ARF.erase()
-#print(my_ARF.list_of_leaves_and_depth.keys())#test_set_of_points([Point([2, 5]),Point([3, 5])]))
-# #my_ARF.insert_one_point(Point([9, 3, 5]))
-# print("RES")
-my_ARF.print()

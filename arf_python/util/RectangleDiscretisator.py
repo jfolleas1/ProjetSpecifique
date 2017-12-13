@@ -22,9 +22,6 @@ class RectangleDiscretisator(Discretisator):
 
     def __init__(self, lambda_error=0.001, method = Constants.DIS_DOUBLE):
         Discretisator.__init__(self, lambda_error, method)
-        print(method)
-        print(method + " * " +Constants.DIS_DOUBLE + " * " + Constants.DIS_TESTS
-              + " * " +Constants.DIS_INPUTS)
 
     def minimisePoint(self, point):
         """
@@ -50,9 +47,9 @@ class RectangleDiscretisator(Discretisator):
     def discretise_point(self, point):
         """
         Apply a combinatory ceil and floor to each coordinate of the given point in parameter, according to the lambda_error.
-        Return a list of points that enclose the given point in parameter, in function of the dimension of the point and the lambda_error
         Args :
         :param point: coordinates which have to be maximised
+        :return: a list of points that enclose the given point in parameter, in function of the dimension of the point and the lambda_error
         """
         #deepcopy the point given in parmeter to prevent instruction to modify it and be able able to use it again without modification
         point_c = deepcopy(point)
@@ -86,19 +83,19 @@ class RectangleDiscretisator(Discretisator):
                 min_dist = point.distance(pt)
         return min_pt
 
-    def discretise_point_to_insert(self, point):
+    def discretise_points_to_insert(self, points):
         points_to_insert = []
         if self.method_type == Constants.DIS_TESTS:
-            points_to_insert.append(self.discretise_point_to_one(point))
+            points_to_insert.append(self.discretise_point_to_one(points))
         else:
-            for d_pt in self.discretise_point(point):
-                points_to_insert.append(d_pt)
+            points_to_insert += self.discretise_point(points)
         return points_to_insert
 
-    def discretise_point_to_test(self, point):
+    def discretise_points_to_test(self, points):
         points_to_test = []
-        if self.method_type == Constants.DIS_INPUTS:
-            points_to_test = [self.discretise_point_to_one(point)]
-        else:
-            points_to_test = self.discretise_point(point)
+        for point in points:
+            if self.method_type == Constants.DIS_INPUTS:
+                points_to_test.append(self.discretise_point_to_one(point))
+            else:
+                points_to_test += self.discretise_point(point)
         return points_to_test
