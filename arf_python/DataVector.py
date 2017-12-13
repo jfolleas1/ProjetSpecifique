@@ -15,10 +15,10 @@ SEPARATOR_COORDINATE = ","
 class DataVector:
 
 
-    def __init__(self, dimension,  file_path, point_list = None, size_of_data = None):
+    def __init__(self, dimension,  file_path, points_list = None, size_of_data = None):
         self.dimension = dimension
         self.size_of_data = size_of_data
-        self.point_list = point_list
+        self.points_list = points_list
 
         # load data from file_path
         # initiate point_list and size_data
@@ -50,15 +50,28 @@ class DataVector:
                 if len(coodinates)!= self.dimension:
                     DataVector.logger.error('The dimension is not correct, expected : '+ str(len(coodinates)) + str(self.dimension))
                     raise Exception("The dimension of the point at line " + str(line_counter) + " is not correct")
-                self.point_list.append(Point(coodinates))
+                self.points_list.append(Point(coodinates))
 
-            self.size_of_data = len(self.point_list)
+            self.size_of_data = len(self.points_list)
 
         except Exception as e:
             DataVector.logger.error("Probleme during reading line " + str(line_counter))
             raise e
 
+    def get_points(self):
+        """
+        Return the point list.
+        :param file_path:
+        :return:
+        """
+        return self.points_list
 
-# --------------------------------------------------------------------------------------------
-# Private method
+    def get_size_of_data(self):
+        """
+        Return the size of data.
+        :param file_path:
+        :return:
+        """
+        return self.size_of_data
+
 
