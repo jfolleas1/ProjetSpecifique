@@ -270,9 +270,3 @@ class ARF:
         cur_node = self.root
         self.__print(cur_node, cur_range, cur_range_size, cur_middle,0)
         print("ROOT")
-
-
-
-
-
-

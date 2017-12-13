@@ -5,8 +5,8 @@ from decimal import *
 import pandas as pd
 from pathlib import Path
 import math
+import os
 
-logger = Logger("DataVector")
 
 # --------- Constants
 SEPARATOR_COORDINATE = ","
@@ -14,8 +14,9 @@ SEPARATOR_COORDINATE = ","
 # --------- Code
 class DataVector:
 
+    logger = Logger("DataVector")
 
-    def __init__(self, dimension,  file_path, points_list = None, size_of_data = None):
+    def __init__(self, dimension,  file_path, points_list = [], size_of_data = 0):
         self.dimension = dimension
         self.size_of_data = size_of_data
         self.points_list = points_list
@@ -32,12 +33,15 @@ class DataVector:
         :return:
         """
         # We test if the file exist
+
+        #print(os.getcwd())
+        self.points_list = []
         path_file = Path(file_path)
-        DataVector.logger.info('We get the points from' + str(path_file))
+        DataVector.logger.info('We get the points from ' + str(path_file))
 
         if not path_file.is_file():
             DataVector.logger.error('The file does not exist')
-            raise Exception("The file does not exist"+ str(path_file))
+            raise Exception("The file does not exist "+ str(path_file))
 
         data_file = pd.read_csv(str(path_file))
         line_counter = -1
