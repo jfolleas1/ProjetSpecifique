@@ -1,7 +1,7 @@
 import unittest
 
-from Arf_python.ARF import ARF
-from Arf_python.Point import Point
+from arf_python.ARF import ARF
+from arf_python.Point import Point
 
 class RandomTest(unittest.TestCase):
 

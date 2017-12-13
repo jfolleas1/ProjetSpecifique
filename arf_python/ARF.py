@@ -268,30 +268,3 @@ class ARF:
         cur_node = self.root
         self.__print(cur_node, cur_range, cur_range_size, cur_middle,0)
         print("ROOT")
-
-
-
-    #TODO pour un point donné calcul les 2**dim points à insérer comme dans bloom filter
-
-
-
-my_ARF = ARF(dim=2, domain=16, min_range_size=4, size=10)
-# print(my_ARF.root.__repr__())
-# print(my_ARF.root.get_child_node(0).__repr__())
-# print(my_ARF.root.get_child_node(1).__repr__())
-# print(my_ARF.root.get_child_node(2).__repr__())
-# print(my_ARF.root.get_child_node(3).__repr__())
-my_ARF.insert_one_point(Point([5, 5]))
-my_ARF.insert_one_point(Point([3, 5]))
-my_ARF.insert_one_point(Point([3, 3]))
-
-my_ARF.insert_one_point(Point([13, 13]))
-my_ARF.insert_one_point(Point([11, 13]))
-my_ARF.insert_one_point(Point([11, 11]))
-
-#my_ARF.print()
-my_ARF.erase()
-#print(my_ARF.list_of_leaves_and_depth.keys())#test_set_of_points([Point([2, 5]),Point([3, 5])]))
-# #my_ARF.insert_one_point(Point([9, 3, 5]))
-# print("RES")
-my_ARF.print()

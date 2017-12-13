@@ -76,7 +76,7 @@ class Node(GeneralNode):
         Test if the current node has only leaves as children
         :return:
         """
-        if len(self.children_nodes) < 1:
+        if len(self.children_nodes) == 0:
             return True
 
         return False
@@ -147,13 +147,17 @@ class Node(GeneralNode):
         Change the node in leaf and modify the father value.
         :return: the created leaf
         """
+
+        # check if the nodes has some leaves
+        if len(self.children_nodes) > 1:
+            Node.logger.warn("Current nodes have nodes as children")
+
         # Compute the value with different values.
         leaf_value = False
         for place, leaf in self.children_leaf.items():
             leaf_value |= leaf.get_value()
 
         # Change the value of the father and put leaves instead.
-        #print("leaf value" + str (leaf_value))
         return self.father.change_child_value(self, leaf_value)
 
     def had_useful_leaves(self, min):
@@ -205,6 +209,12 @@ class Node(GeneralNode):
 
         Node.deep -= 1
 
+    def get_leaves(self):
+        """
+        :return: the leaves children
+        """
+        return self.children_leaf
+
 #---------------------------------------------------------------------------------------------------------------
 
 # Public
@@ -223,6 +233,8 @@ def set_min_range_size(new_min_range_size):
     :return:
     """
     Node.min_range_size = new_min_range_size
+
+
 # -----------------------------------------------------------------------------------------
 # Private methods
 def _remove_key(d, key):
