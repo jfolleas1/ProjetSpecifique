@@ -136,6 +136,7 @@ class RandomDataGenerator(DataProvider):
                 pass
             pd.DataFrame(array_vector).to_csv(os.path.join(os.getcwd(), DATA_FOLDER, save_file_name), encoding='utf-8')
 
+        return array_vector
 
     # overrides(DataProvider)
     def get_points(self):

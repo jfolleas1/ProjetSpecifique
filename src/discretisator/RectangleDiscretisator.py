@@ -22,6 +22,9 @@ class RectangleDiscretisator(Discretisator):
 
     def __init__(self, lambda_error=0.001, method = Constants.DIS_DOUBLE):
         Discretisator.__init__(self, lambda_error, method)
+        print(method)
+        print(method + " * " +Constants.DIS_DOUBLE + " * " + Constants.DIS_TESTS
+              + " * " +Constants.DIS_INPUTS)
 
     def minimisePoint(self, point):
         """
