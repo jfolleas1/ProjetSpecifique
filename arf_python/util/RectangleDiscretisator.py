@@ -3,9 +3,9 @@
 # This file provide an abstract class with method to frame a point
 
 # -------- Import
-from src.discretisator.Discretisator import Discretisator
-from src.structureData.Point import Point
-import src.util.Constants as Constants
+from arf_python.util.Discretisator import Discretisator
+from arf_python.Point import Point
+import arf_python.util.Constants as Constants
 
 from copy import deepcopy
 
@@ -85,10 +85,11 @@ class RectangleDiscretisator(Discretisator):
 
     def discretise_points_to_insert(self, points):
         points_to_insert = []
-        if self.method_type == Constants.DIS_TESTS:
-            points_to_insert.append(self.discretise_point_to_one(points))
-        else:
-            points_to_insert += self.discretise_point(points)
+        for point in points:
+            if self.method_type == Constants.DIS_TESTS:
+                points_to_insert.append(self.discretise_point_to_one(point))
+            else:
+                points_to_insert += self.discretise_point(point)
         return points_to_insert
 
     def discretise_points_to_test(self, points):

@@ -120,9 +120,13 @@ class ARF:
         :return: list of Boolean at True is the answer for the corresponding point is yes.
         """
         list_of_answer = []
+        count = 0
         for point in set_of_points:
-            list_of_answer.append(self.test_one_point(point))
-        return list_of_answer
+            resp = self.test_one_point(point)
+            list_of_answer.append(resp)
+            if resp:
+                count += 1
+        return list_of_answer, count
 
     def insert_one_point(self, point):
         """
@@ -159,6 +163,7 @@ class ARF:
         :param point: the point we want to test, must be a Point of same dimension than the ARF
         :return: Nothing
         """
+
         assert type(points) == list, ":param points: must be a list of Point"
         assert type(points[0]) == Point, ":param points: must be a list of Point"
         assert points[0].dimension == self.dim, ":param points: must a list of point which have " \

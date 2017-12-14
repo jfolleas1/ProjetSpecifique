@@ -34,7 +34,7 @@ class DataVector:
         """
         # We test if the file exist
 
-        #print(os.getcwd())
+        print(os.getcwd())
         self.points_list = []
         path_file = Path(file_path)
         DataVector.logger.info('We get the points from ' + str(path_file))
