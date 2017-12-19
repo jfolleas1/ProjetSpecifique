@@ -70,7 +70,7 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
     extension = "_.csv"
 
     # Loop on dim.
-    for dim in range(1, 2):
+    for dim in range(1, 7):
 
         logger.info("Work for dimension : " + str(dim))
 
@@ -100,7 +100,7 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
             print(DELTA)
 
             bloom_filter = BloomFilterTester(SIZE_DATA, SIZE_DATA * RATE_M_N, dim, REAL_SIZE, list_point_feed,
-                                             RectangleDiscretisator(DELTA, method_cur))
+                                             RectangleDiscretisator(math.floor(DELTA), method_cur))
 
             nb_point_in_bloom_filter = bloom_filter.test_set_points(list_point_test)
 
@@ -115,26 +115,24 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
         #-----------------------------------------
         #Arf part
 
-        name_feed = get_name_file_if_exit(dim, "feed", extension, name_feed)
-        name_test = get_name_file_if_exit(dim, "test", extension, name_test)
-        if name_feed == None or name_test == None:
+        name_feed_arf = get_name_file_if_exit(dim, "feed", extension, name_feed)
+        name_test_arf = get_name_file_if_exit(dim, "test", extension, name_test)
+
+        if name_feed_arf == None or name_test_arf == None:
             raise Exception("Impossible to find the file")
 
-        arf = ArfMAin(name_feed, name_test, dim, DOMAIN, SIZE_DATA * RATE_M_N, DELTA)
+        arf = ArfMAin(name_feed_arf, name_test_arf, dim, DOMAIN, SIZE_DATA * RATE_M_N, math.floor(DELTA))
         arf.feed()
         nb_point_in_bloom_filter, nb_false_positif = arf.test()
 
-        print(nb_false_positif)
         # Add result to the list.
         dic_response[ARF_METHOD][1].append(dim)
         dic_response[ARF_METHOD][2].append(nb_false_positif / len(list_point_test))
 
-        print(dic_response)
-
     return dic_response
 
 def check_if_file_exit (dim, supTest):
-    dir = "../data"
+    dir = "./data"
     for file in os.listdir(dir):
         dim_str = ("DIM"+ str(dim) + "_")
         delta_str = ("DELTA"+ str(DELTA)+ "_")
@@ -145,7 +143,7 @@ def check_if_file_exit (dim, supTest):
     return None
 
 def get_name_file_if_exit (dim, supTest, extension, type):
-    dir = "../data"
+    dir = "./data"
     for file in os.listdir(dir):
         dim_str = ("DIM"+ str(dim) + "_")
         delta_str = ("DELTA"+ str(DELTA)+ "_")
