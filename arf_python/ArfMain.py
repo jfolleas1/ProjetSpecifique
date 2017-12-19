@@ -4,6 +4,8 @@ from arf_python.ARF import ARF
 from arf_python.DataVector import DataVector
 import arf_python.util.Constants as Constants
 from arf_python.util.RectangleDiscretisator import RectangleDiscretisator
+
+import math
 ## ----------------------------------------------------------------------------
 # constant
 
@@ -42,11 +44,13 @@ class ArfMAin:
         points = self.data_vector_feed.get_points()
         d_points = self.discretizor.discretise_points_to_insert(points)
         self.arf.insert_set_of_points(d_points)
+        self.arf.erase()
 
     def test(self):
         """
         :return:
         """
-        points = self.data_vector_feed.get_points()
+        points = self.data_vector_test.get_points()
         d_points = self.discretizor.discretise_points_to_test(points)
         return self.arf.test_set_of_points(d_points)
+

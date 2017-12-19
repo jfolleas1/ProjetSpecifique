@@ -70,7 +70,7 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
     extension = "_.csv"
 
     # Loop on dim.
-    for dim in range(1, 6):
+    for dim in range(1, 2):
 
         logger.info("Work for dimension : " + str(dim))
 
@@ -134,7 +134,7 @@ def create_bloom_filters(logger, method = None, title = "Methode : "):
     return dic_response
 
 def check_if_file_exit (dim, supTest):
-    dir = "./data"
+    dir = "../data"
     for file in os.listdir(dir):
         dim_str = ("DIM"+ str(dim) + "_")
         delta_str = ("DELTA"+ str(DELTA)+ "_")
@@ -145,7 +145,7 @@ def check_if_file_exit (dim, supTest):
     return None
 
 def get_name_file_if_exit (dim, supTest, extension, type):
-    dir = "./data"
+    dir = "../data"
     for file in os.listdir(dir):
         dim_str = ("DIM"+ str(dim) + "_")
         delta_str = ("DELTA"+ str(DELTA)+ "_")

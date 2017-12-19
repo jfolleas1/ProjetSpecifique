@@ -94,9 +94,10 @@ class RectangleDiscretisator(Discretisator):
 
     def discretise_points_to_test(self, points):
         points_to_test = []
-        for point in points:
-            if self.method_type == Constants.DIS_INPUTS:
-                points_to_test.append(self.discretise_point_to_one(point))
-            else:
-                points_to_test += self.discretise_point(point)
+        if self.method_type == Constants.DIS_INPUTS:
+            for point in points:
+                points_to_test.append([self.discretise_point_to_one(point)])
+        else:
+            for point in points:
+                points_to_test.append(self.discretise_point(point))
         return points_to_test

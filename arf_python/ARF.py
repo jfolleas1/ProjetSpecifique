@@ -4,12 +4,10 @@
 
 # -------- Import
 import copy
-import time
 
 from arf_python.Leaf import Leaf
 from arf_python.Node import Node
 from arf_python.Point import Point
-from arf_python.util.ReaderFromGenerator import RandomDataGenerator
 # --------- Constants
 
 
@@ -39,7 +37,7 @@ class ARF:
         self.list_of_leaves_and_depth = {} # List of tuple (leaf, depth); will help for erase the tree
         for ind in range(2**self.dim):
             self.list_of_leaves_and_depth[self.root.get_child_node(ind).__repr__()] = (self.root.get_child_node(ind), 1)
-        self.real_size_nodes = 5
+        self.real_size_nodes = 2**self.dim + 1
 
     def __get_max_depth(self):
         max_depth = 0
@@ -119,14 +117,17 @@ class ARF:
         :param set_of_points: the points we want to test, must be a list of Point of same dimension than the ARF
         :return: list of Boolean at True is the answer for the corresponding point is yes.
         """
+        assert type(set_of_points[0]) == list, ":param set_of_points: must be a list of list of Point"
+        assert type(set_of_points[0][0]) == Point, ":param set_of_points: must be a list of list of Point"
         list_of_answer = []
-        count = 0
-        for point in set_of_points:
-            resp = self.test_one_point(point)
-            list_of_answer.append(resp)
-            if resp:
-                count += 1
-        return list_of_answer, count
+        for l in set_of_points:
+            res = False
+            count = 1
+            for point in l:
+                res |= self.test_one_point(point)
+            list_of_answer.append(res)
+        return list_of_answer, len(list(filter(lambda x: x, list_of_answer)))
+
 
     def insert_one_point(self, point):
         """
@@ -197,6 +198,7 @@ class ARF:
                     if leaf.father.leaves_got_same_value():
                         if leaf.father != self.root:
                             self.__merge_one_node(leaf.father)
+                            self.real_size_nodes -= 2 ** self.dim
                             no_changes = False
                             break
 
@@ -273,5 +275,6 @@ class ARF:
         cur_middle = [self.domain/2]*self.dim
         cur_range =[[0,self.domain]]*self.dim
         cur_node = self.root
-        self.__print(cur_node, cur_range, cur_range_size, cur_middle,0)
         print("ROOT")
+        self.__print(cur_node, cur_range, cur_range_size, cur_middle,0)
+

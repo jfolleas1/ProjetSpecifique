@@ -32,7 +32,7 @@ class RandomTest(unittest.TestCase):
     def test_arf_set_test(self):
         arf1 = ARF(dim=2, domain=32, min_range_size=4)
         arf1.insert_one_point(Point([3, 5]))
-        res = arf1.test_set_of_points([Point([3, 5]), Point([7, 12])])
+        res, _ = arf1.test_set_of_points([[Point([3, 5])], [Point([7, 12])]])
         self.assertEqual(res, [True, False], "Problem with ARF with set of tests")
 
     def test_arf_collision(self):
@@ -45,11 +45,23 @@ class RandomTest(unittest.TestCase):
     def test_arf_dim4(self):
         arf1 = ARF(dim=4, domain=32, min_range_size=4)
         arf1.insert_one_point(Point([3, 5, 3, 5]))
-        res = arf1.test_set_of_points([Point([3, 5, 3, 5]), Point([7, 12, 3, 5])])
+        res, _ = arf1.test_set_of_points([[Point([3, 5, 3, 5])], [Point([7, 12, 3, 5])]])
         self.assertEqual(res, [True, False], "Problem with ARF dim = 4")
 
     def test_arf_dim3(self):
         arf1 = ARF(dim=3, domain=32, min_range_size=4)
         arf1.insert_one_point(Point([3, 5, 3]))
-        res = arf1.test_set_of_points([Point([3, 5, 3]), Point([7, 12, 3])])
+        res, _ = arf1.test_set_of_points([[Point([3, 5, 3])], [Point([7, 12, 3])]])
         self.assertEqual(res, [True, False], "Problem with ARF dim = 3")
+
+    def test_arf_dim3_or(self):
+        arf1 = ARF(dim=3, domain=32, min_range_size=4)
+        arf1.insert_one_point(Point([3, 5, 3]))
+        res, _ = arf1.test_set_of_points([[Point([3, 5, 3]), Point([8, 5, 3])]])
+        self.assertEqual(res, [True], "Problem with ARF dim = 3")
+
+    def test_erase(self):
+        myArf = ARF(dim=1, domain=32, min_range_size=4, size=9)
+        myArf.insert_one_point(Point([1]))
+        myArf.erase()
+        assert myArf.get_bit_size() == 7, "Problem with erase"
